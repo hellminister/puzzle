@@ -1,0 +1,20 @@
+<component name="libraryTable">
+  <library name="javafx 15">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../../../../../Program Files/Java/javafx-sdk-15/lib" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../../../../Program Files/Java/javafx-sdk-15/openjfx-15.0.1-javadoc.zip!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../../../Program Files/Java/javafx-sdk-15/src.zip!/javafx.base" />
+      <root url="jar://$PROJECT_DIR$/../../../../../Program Files/Java/javafx-sdk-15/src.zip!/javafx.controls" />
+      <root url="jar://$PROJECT_DIR$/../../../../../Program Files/Java/javafx-sdk-15/src.zip!/javafx.fxml" />
+      <root url="jar://$PROJECT_DIR$/../../../../../Program Files/Java/javafx-sdk-15/src.zip!/javafx.graphics" />
+      <root url="jar://$PROJECT_DIR$/../../../../../Program Files/Java/javafx-sdk-15/src.zip!/javafx.media" />
+      <root url="jar://$PROJECT_DIR$/../../../../../Program Files/Java/javafx-sdk-15/src.zip!/javafx.swing" />
+      <root url="jar://$PROJECT_DIR$/../../../../../Program Files/Java/javafx-sdk-15/src.zip!/javafx.web" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/../../../../../Program Files/Java/javafx-sdk-15/lib" recursive="false" />
+  </library>
+</component>
