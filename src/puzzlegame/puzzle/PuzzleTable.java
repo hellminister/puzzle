@@ -4,26 +4,19 @@ import javafx.beans.binding.DoubleExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.util.converter.IntegerStringConverter;
 import puzzlegame.PuzzleMain;
+import puzzlegame.util.Utilities;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Random;
 
 public class PuzzleTable extends Scene {
@@ -84,7 +77,7 @@ public class PuzzleTable extends Scene {
             }
         });
 
-        attach(pane, root.widthProperty(), root.heightProperty());
+        Utilities.attach(pane, root.widthProperty(), root.heightProperty());
 
         setOnKeyPressed(event -> {
             var key = event.getCode();
@@ -121,15 +114,7 @@ public class PuzzleTable extends Scene {
         table.getChildren().remove(puzzleFragment);
     }
 
-    public static void attach(Region pane, DoubleExpression width, DoubleExpression height){
-        pane.maxWidthProperty().bind(width);
-        pane.minWidthProperty().bind(width);
-        pane.prefWidthProperty().bind(width);
 
-        pane.maxHeightProperty().bind(height);
-        pane.minHeightProperty().bind(height);
-        pane.prefHeightProperty().bind(height);
-    }
 
     public ReadOnlyBooleanProperty puzzleFinishedProperty() {
         return puzzleFinished;

@@ -11,6 +11,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import puzzlegame.PuzzleMain;
 import puzzlegame.chooserdialog.PuzzleChooserDialog;
+import puzzlegame.util.Utilities;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,6 +79,8 @@ public class StartScreen extends Scene {
         buttonBar.setSpacing(10);
 
         backgroundImagePane.getChildren().add(buttonBar);
+
+        Utilities.attach(backgroundImagePane, mainWindow.getPrimaryStage().widthProperty(), mainWindow.getPrimaryStage().heightProperty());
 
 
 

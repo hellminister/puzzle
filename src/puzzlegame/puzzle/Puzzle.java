@@ -71,7 +71,7 @@ public class Puzzle {
 
     private static class FinishedPuzzle extends BooleanBinding{
 
-        private ObservableList<PuzzleFragment> puzzle;
+        private final ObservableList<PuzzleFragment> puzzle;
 
         public FinishedPuzzle(ObservableList<PuzzleFragment> puzzle){
             bind(puzzle);
