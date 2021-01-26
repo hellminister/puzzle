@@ -1,20 +1,24 @@
 package puzzlegame.puzzle;
 
 import javafx.beans.binding.DoubleExpression;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
+import puzzlegame.PuzzleMain;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,54 +28,24 @@ import java.util.Random;
 
 public class PuzzleTable extends Scene {
 
-    private StackPane table;
-    private ScrollPane pane;
+    private final StackPane table;
+    private final ScrollPane pane;
+
+    private final PuzzleMain puzzleGame;
+
+    private final BooleanProperty puzzleFinished;
 
     /**
      * Creates a Scene for a specific root Node.
      */
-    public PuzzleTable(Stage stage) {
+    public PuzzleTable(PuzzleMain puzzleGame) {
         super(new BorderPane());
+        this.puzzleGame = puzzleGame;
+
         var root = (BorderPane)getRoot();
         root.setStyle("-fx-background-color: black");
 
-
-        var fc = new FileChooser();
-        fc.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("All Images", "*.jpg", "*.gif", "*.png")
-        );
-
-        var db = new TextInputDialog();
-        db.setContentText("How many pieces?");
-
-        db.getEditor().setTextFormatter(
-                new TextFormatter<>(new IntegerStringConverter(), 1));
-
-
-        fc.setSelectedExtensionFilter(fc.getExtensionFilters().get(0));
-
-        MenuBar menubar = new MenuBar();
-        Menu menu = new Menu("file");
-        MenuItem loadImage = new MenuItem("load Image");
-
-        loadImage.setOnAction(event -> {
-            File file = fc.showOpenDialog(stage);
-            if (file != null){
-                var nbPieceSt = db.showAndWait();
-                System.out.println(nbPieceSt);
-                nbPieceSt.ifPresent(s -> loadPuzzle(file, Integer.parseInt(s)));
-                pane.layout();
-                pane.setHvalue(0.5);
-                pane.setVvalue(0.5);
-
-            }
-        });
-
-        menu.getItems().add(loadImage);
-
-        menubar.getMenus().add(menu);
-
-        root.setTop(menubar);
+        puzzleFinished = new SimpleBooleanProperty(true);
 
         table = new StackPane();
         table.setAlignment(Pos.CENTER);
@@ -110,43 +84,16 @@ public class PuzzleTable extends Scene {
             }
         });
 
-        attach(pane, root.widthProperty(), root.heightProperty().subtract(menubar.heightProperty()));
+        attach(pane, root.widthProperty(), root.heightProperty());
 
-    }
+        setOnKeyPressed(event -> {
+            var key = event.getCode();
 
-
-    private void loadPuzzle(File file, int nbPieces) {
-        table.getChildren().clear();
-        try (InputStream is = new FileInputStream(file)) {
-            Image image = new Image(is);
-            Puzzle puzzle = new Puzzle(image, nbPieces, this);
-
-            table.setMinHeight(image.getHeight() * 4);
-            table.setMinWidth(image.getWidth() * 4);
-
-            Random rand = new Random();
-            for (PuzzleFragment pf : puzzle.getFragments()){
-                pf.setTranslateX(rand.nextInt(1200)-600);
-
-                pf.setTranslateY(rand.nextInt(1200)-600);
-                table.getChildren().add(pf);
+            if (key == KeyCode.ESCAPE){
+                puzzleGame.switchToStartScreen();
             }
 
-            if (table.getMinWidth() < pane.getWidth()){
-                table.setMinWidth(pane.getWidth());
-            }
-
-            if (table.getMinHeight() < pane.getHeight()){
-                table.setMinHeight(pane.getHeight());
-            }
-
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
+        });
 
     }
 
@@ -182,5 +129,40 @@ public class PuzzleTable extends Scene {
         pane.maxHeightProperty().bind(height);
         pane.minHeightProperty().bind(height);
         pane.prefHeightProperty().bind(height);
+    }
+
+    public ReadOnlyBooleanProperty puzzleFinishedProperty() {
+        return puzzleFinished;
+    }
+
+    public void setNewPuzzle(Image choosenImage, int nbPieces) {
+        table.getChildren().clear();
+        Puzzle puzzle = new Puzzle(choosenImage, nbPieces, this);
+
+        table.setMinHeight(choosenImage.getHeight() * 4);
+        table.setMinWidth(choosenImage.getWidth() * 4);
+
+        Random rand = new Random();
+        for (PuzzleFragment pf : puzzle.getFragments()){
+            pf.setTranslateX(rand.nextInt(1200)-600);
+
+            pf.setTranslateY(rand.nextInt(1200)-600);
+            table.getChildren().add(pf);
+        }
+
+        if (table.getMinWidth() < pane.getWidth()){
+            table.setMinWidth(pane.getWidth());
+        }
+
+        if (table.getMinHeight() < pane.getHeight()){
+            table.setMinHeight(pane.getHeight());
+        }
+
+        pane.layout();
+
+        pane.setVvalue(0.5);
+        pane.setHvalue(0.5);
+
+        puzzleFinished.bind(puzzle.finished());
     }
 }
