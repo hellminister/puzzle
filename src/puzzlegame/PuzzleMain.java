@@ -2,14 +2,8 @@ package puzzlegame;
 
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.stage.Window;
-import puzzlegame.chooserdialog.PuzzleChooserDialog;
-import puzzlegame.chooserdialog.PuzzleChooserScene;
 import puzzlegame.puzzle.PuzzleTable;
 import puzzlegame.startscreen.StartScreen;
 
@@ -22,14 +16,12 @@ public class PuzzleMain extends Application {
     private Stage primaryStage;
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = new StackPane();
+    public void start(Stage primaryStage){
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Hello World");
         puzzleTable = new PuzzleTable(this);
         startScreen = new StartScreen(this);
 
-      //  primaryStage.setScene(puzzleTable);
         primaryStage.setScene(startScreen);
         primaryStage.sizeToScene();
         primaryStage.setMaximized(true);
@@ -51,8 +43,8 @@ public class PuzzleMain extends Application {
         return primaryStage;
     }
 
-    public void sendInfoToPuzzleTable(Image choosenImage, int nbPieces) {
-        puzzleTable.setNewPuzzle(choosenImage, nbPieces);
+    public void sendInfoToPuzzleTable(Image chosenImage, int nbPieces) {
+        puzzleTable.setNewPuzzle(chosenImage, nbPieces);
     }
 
     public void switchToPuzzleTable() {
@@ -61,5 +53,9 @@ public class PuzzleMain extends Application {
 
     public void switchToStartScreen() {
         primaryStage.setScene(startScreen);
+    }
+
+    public void showPuzzleChooserDialog() {
+        startScreen.showPuzzleChooserDialog();
     }
 }

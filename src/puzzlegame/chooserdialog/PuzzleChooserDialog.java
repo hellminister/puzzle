@@ -18,8 +18,8 @@ public class PuzzleChooserDialog extends Stage {
 
     }
 
-    public void sendInfoToPuzzleTable(Image choosenImage, int nbPieces) {
-        puzzleGame.sendInfoToPuzzleTable(choosenImage, nbPieces);
+    public void sendInfoToPuzzleTable(Image chosenImage, int nbPieces) {
+        puzzleGame.sendInfoToPuzzleTable(chosenImage, nbPieces);
     }
 
     public void mainWindowSwitchToTable() {

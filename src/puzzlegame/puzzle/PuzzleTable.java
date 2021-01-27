@@ -1,6 +1,5 @@
 package puzzlegame.puzzle;
 
-import javafx.beans.binding.DoubleExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -12,9 +11,10 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import puzzlegame.PuzzleMain;
+import puzzlegame.puzzle.victorypane.VictoryPane;
 import puzzlegame.util.Utilities;
 
 import java.util.Random;
@@ -32,13 +32,22 @@ public class PuzzleTable extends Scene {
      * Creates a Scene for a specific root Node.
      */
     public PuzzleTable(PuzzleMain puzzleGame) {
-        super(new BorderPane());
+        super(new StackPane());
         this.puzzleGame = puzzleGame;
 
-        var root = (BorderPane)getRoot();
-        root.setStyle("-fx-background-color: black");
+
+        var root = (StackPane) getRoot();
+
+        var borderPane = new VBox();
+        borderPane.setStyle("-fx-background-color: black");
 
         puzzleFinished = new SimpleBooleanProperty(true);
+
+        VictoryPane victoryPane = new VictoryPane(this);
+        victoryPane.visibleProperty().bind(puzzleFinished);
+
+        root.setAlignment(Pos.CENTER);
+        root.getChildren().addAll(borderPane, victoryPane);
 
         table = new StackPane();
         table.setAlignment(Pos.CENTER);
@@ -55,7 +64,7 @@ public class PuzzleTable extends Scene {
         pane.setStyle("-fx-background-color: black");
         pane.setPannable(true);
 
-        root.setCenter(pane);
+        borderPane.getChildren().addAll(pane);
 
         table.setOnScroll(event -> {
             double scrollValue = event.getDeltaY();
@@ -77,7 +86,10 @@ public class PuzzleTable extends Scene {
             }
         });
 
-        Utilities.attach(pane, root.widthProperty(), root.heightProperty());
+        Utilities.attach(pane, borderPane.widthProperty(), borderPane.heightProperty());
+        Utilities.attach(root, puzzleGame.getPrimaryStage().widthProperty(), puzzleGame.getPrimaryStage().heightProperty());
+        Utilities.attach(victoryPane, root.widthProperty(), root.heightProperty());
+        Utilities.attach(borderPane, root.widthProperty(), root.heightProperty());
 
         setOnKeyPressed(event -> {
             var key = event.getCode();
@@ -88,6 +100,10 @@ public class PuzzleTable extends Scene {
 
         });
 
+    }
+
+    public PuzzleMain getPuzzleGame() {
+        return puzzleGame;
     }
 
     public void resizeTable(Bounds position){
@@ -120,12 +136,12 @@ public class PuzzleTable extends Scene {
         return puzzleFinished;
     }
 
-    public void setNewPuzzle(Image choosenImage, int nbPieces) {
+    public void setNewPuzzle(Image chosenImage, int nbPieces) {
         table.getChildren().clear();
-        Puzzle puzzle = new Puzzle(choosenImage, nbPieces, this);
+        Puzzle puzzle = new Puzzle(chosenImage, nbPieces, this);
 
-        table.setMinHeight(choosenImage.getHeight() * 4);
-        table.setMinWidth(choosenImage.getWidth() * 4);
+        table.setMinHeight(chosenImage.getHeight() * 4);
+        table.setMinWidth(chosenImage.getWidth() * 4);
 
         Random rand = new Random();
         for (PuzzleFragment pf : puzzle.getFragments()){

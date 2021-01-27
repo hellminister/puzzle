@@ -67,7 +67,7 @@ public class StartScreen extends Scene {
 
         Button startNew = new Button("Start new puzzle");
         startNew.setOnAction(event -> {
-            pcd.show();
+            showPuzzleChooserDialog();
         });
 
         Button quit = new Button("Quit");
@@ -81,8 +81,9 @@ public class StartScreen extends Scene {
         backgroundImagePane.getChildren().add(buttonBar);
 
         Utilities.attach(backgroundImagePane, mainWindow.getPrimaryStage().widthProperty(), mainWindow.getPrimaryStage().heightProperty());
+    }
 
-
-
+    public void showPuzzleChooserDialog(){
+        pcd.show();
     }
 }

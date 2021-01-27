@@ -3,6 +3,7 @@ package puzzlegame.chooserdialog;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,22 +12,18 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.util.converter.IntegerStringConverter;
-import puzzlegame.PuzzleMain;
 
 import java.io.*;
-import java.text.DecimalFormat;
-import java.text.FieldPosition;
-import java.text.NumberFormat;
-import java.text.ParsePosition;
 
 public class PuzzleChooserScene extends Scene {
 
 
-    private Image choosenImage = null;
-    private IntegerProperty nbPieces;
+    private Image chosenImage = null;
+    private final IntegerProperty nbPieces;
 
 
     public PuzzleChooserScene(PuzzleChooserDialog pcd) {
@@ -44,11 +41,23 @@ public class PuzzleChooserScene extends Scene {
         var rightSide = new VBox();
         var leftSide = new VBox();
         upperBox.getChildren().addAll(leftSide, rightSide);
+        upperBox.setAlignment(Pos.CENTER);
 
         ImageView preview = new ImageView();
         preview.setPreserveRatio(true);
         preview.setFitHeight(400);
         preview.setFitWidth(400);
+        StackPane previewPane = new StackPane();
+
+        previewPane.setMinSize(406,406);
+        previewPane.setMaxSize(406, 406);
+
+        previewPane.getChildren().addAll(preview);
+
+        previewPane.setStyle("-fx-background-color: black;" +
+                " -fx-border-color: darkslategrey;" +
+                " -fx-border-width: 3");
+
 
         var fc = new FileChooser();
         fc.getExtensionFilters().addAll(
@@ -62,7 +71,7 @@ public class PuzzleChooserScene extends Scene {
             if (file != null){
                 try (InputStream is = new FileInputStream(file)) {
                     Image image = new Image(is);
-                    choosenImage = image;
+                    chosenImage = image;
                     preview.setImage(image);
 
                 } catch (IOException e) {
@@ -71,7 +80,8 @@ public class PuzzleChooserScene extends Scene {
             }
         });
 
-        leftSide.getChildren().addAll(preview, imageChooser);
+        leftSide.getChildren().addAll(previewPane);
+        leftSide.setAlignment(Pos.CENTER);
 
         TextField nbPieceGetter = new TextField();
         nbPieceGetter.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), 4, change -> {
@@ -88,14 +98,15 @@ public class PuzzleChooserScene extends Scene {
         text.textProperty().bind(nbPieces.asString());
 
 
-rightSide.getChildren().addAll(nbPieceGetter, text);
+        rightSide.getChildren().addAll(imageChooser, new Label("Number of pieces"), nbPieceGetter);
+        rightSide.setAlignment(Pos.CENTER);
 
 
 
         Button start = new Button("Start");
         start.setOnAction(event -> {
-            if (choosenImage != null && nbPieces.get() > 1){
-                pcd.sendInfoToPuzzleTable(choosenImage, nbPieces.get());
+            if (chosenImage != null && nbPieces.get() > 1){
+                pcd.sendInfoToPuzzleTable(chosenImage, nbPieces.get());
                 pcd.mainWindowSwitchToTable();
                 pcd.close();
             }
@@ -104,5 +115,6 @@ rightSide.getChildren().addAll(nbPieceGetter, text);
         Button cancel = new Button("Cancel");
         cancel.setOnAction(event -> pcd.close());
         lowerBox.getChildren().addAll(start, cancel);
+        lowerBox.setAlignment(Pos.CENTER);
     }
 }
