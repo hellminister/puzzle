@@ -86,10 +86,10 @@ public class PuzzleTable extends Scene {
             }
         });
 
+        Utilities.attach(borderPane, root.widthProperty(), root.heightProperty());
         Utilities.attach(pane, borderPane.widthProperty(), borderPane.heightProperty());
         Utilities.attach(root, puzzleGame.getPrimaryStage().widthProperty(), puzzleGame.getPrimaryStage().heightProperty());
-        Utilities.attach(victoryPane, root.widthProperty(), root.heightProperty());
-        Utilities.attach(borderPane, root.widthProperty(), root.heightProperty());
+        Utilities.attach(victoryPane, root.widthProperty().multiply(0.75), root.heightProperty().multiply(0.75));
 
         setOnKeyPressed(event -> {
             var key = event.getCode();

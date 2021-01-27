@@ -8,6 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import puzzlegame.puzzle.PuzzleTable;
+import puzzlegame.util.Utilities;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +22,7 @@ public class VictoryPane extends StackPane {
      */
     public VictoryPane(PuzzleTable window) {
         Image image = null;
-        // Background image
+        // victory image
         try (InputStream is = Files.newInputStream(Paths.get("src/resources/teamwork-3275565_1920.jpg"))) {
             image = new Image(is);
         } catch (IOException e) {
@@ -30,9 +31,17 @@ public class VictoryPane extends StackPane {
 
         setAlignment(Pos.CENTER);
 
-        // Create background Pane
+        // Create victory image plate
         var backgroundPlate = new ImageView(image);
         backgroundPlate.setPreserveRatio(true);
+        var platePane = new StackPane();
+
+        platePane.getChildren().add(backgroundPlate);
+
+
+        backgroundPlate.fitHeightProperty().bind(platePane.heightProperty());
+        backgroundPlate.fitWidthProperty().bind(platePane.widthProperty());
+
 
         var splitA = new VBox();
         var buttonBar = new HBox();
@@ -41,7 +50,10 @@ public class VictoryPane extends StackPane {
 
         getChildren().addAll(splitA);
 
-        splitA.getChildren().addAll(backgroundPlate, buttonBar);
+        Utilities.attach(splitA, widthProperty(), heightProperty());
+        Utilities.attach(platePane, splitA.widthProperty(), splitA.heightProperty().subtract(buttonBar.heightProperty()));
+
+        splitA.getChildren().addAll(platePane, buttonBar);
 
         Button newPuzzle = new Button("Start New Puzzle");
         newPuzzle.setOnAction(event -> {

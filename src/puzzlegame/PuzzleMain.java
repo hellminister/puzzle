@@ -49,6 +49,12 @@ public class PuzzleMain extends Application {
 
     public void switchToPuzzleTable() {
         primaryStage.setScene(puzzleTable);
+
+        // until i find a better way to have the scrollbars showing in maximized window
+        if (primaryStage.isMaximized()){
+            primaryStage.setMaximized(false);
+            primaryStage.setMaximized(true);
+        }
     }
 
     public void switchToStartScreen() {
