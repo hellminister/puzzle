@@ -183,6 +183,8 @@ public class PuzzleTable extends Scene {
     }
 
     public void resizeTable(Bounds position){
+        System.out.println(position);
+
         if (position.getMinX() < 0){
             table.setMinWidth(table.getWidth() - position.getMinX());
         }
@@ -202,12 +204,6 @@ public class PuzzleTable extends Scene {
         }
     }
 
-    public void remove(PuzzleFragment puzzleFragment) {
-        table.getChildren().remove(puzzleFragment);
-    }
-
-
-
     public ReadOnlyBooleanProperty puzzleFinishedProperty() {
         return puzzleFinished;
     }
@@ -220,7 +216,7 @@ public class PuzzleTable extends Scene {
         table.setMinWidth(chosenImage.getWidth() * 4);
 
         Random rand = new Random();
-        for (PuzzleFragment pf : puzzle.getFragments()){
+        for (PuzzlePiece pf : puzzle.getPieces()){
             pf.setTranslateX(rand.nextInt(1200)-600);
 
             pf.setTranslateY(rand.nextInt(1200)-600);
@@ -242,6 +238,6 @@ public class PuzzleTable extends Scene {
 
         puzzleFinished.bind(puzzle.finished());
         imageHint.setImage(chosenImage);
-        miniMap.populate(puzzle.getFragments());
+        miniMap.populate(puzzle.getPieces());
     }
 }

@@ -1,21 +1,16 @@
 package puzzlegame.puzzle;
 
-import javafx.geometry.Bounds;
-import javafx.scene.Group;
-import javafx.scene.input.MouseButton;
-
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public class PuzzleFragment extends Group {
+public class PuzzleFragment {
 
     private final List<PuzzlePiece> pieces;
     private final Puzzle fromPuzzle;
 
-    private double lastMouseX;
-    private double lastMouseY;
+
 
 
     public PuzzleFragment(PuzzlePiece puzzlePiece, Puzzle puzzle) {
@@ -23,76 +18,16 @@ public class PuzzleFragment extends Group {
         pieces = new LinkedList<>();
         pieces.add(puzzlePiece);
         fromPuzzle = puzzle;
-        getChildren().add(puzzlePiece);
-
-        setPickOnBounds(false);
-
-        setOnMousePressed(event -> {
-            if (event.getButton() == MouseButton.PRIMARY) {
-                toFront();
-                lastMouseX = event.getScreenX();
-                lastMouseY = event.getScreenY();
-            }
-        });
-
-        setOnMouseDragged(event -> {
-            if (event.getButton() == MouseButton.PRIMARY) {
-                double deltaX = event.getScreenX() - lastMouseX;
-                double deltaY = event.getScreenY() - lastMouseY;
-
-                double initialTranslateX = getTranslateX();
-                double initialTranslateY = getTranslateY();
-
-                // delta / getParent().getScale() -> so the mouse stays with the group in all zooms
-                setTranslateX(initialTranslateX + (deltaX / getParent().getScaleX()));
-                setTranslateY(initialTranslateY + (deltaY / getParent().getScaleY()));
-
-                lastMouseX = event.getScreenX();
-                lastMouseY = event.getScreenY();
-
-
-                puzzle.getTable().resizeTable(getBoundsInParent());
-
-                event.consume();
-            }
-        });
-
-        setOnMouseReleased(event -> {
-            if (event.getButton() == MouseButton.PRIMARY) {
-                fromPuzzle.checkConnections(this);
-            }
-        });
-
-        setOnMouseClicked(event -> {
-            if (event.getButton() == MouseButton.SECONDARY){
-                toBack();
-            }
-        });
-
+        puzzlePiece.setOwningFragment(this);
     }
 
-    public void insertFragment(PuzzleFragment toInsert){
-        PuzzlePiece piece = pieces.get(0);
-
-        Bounds boundsInScene = localToScene(getBoundsInLocal());
-
+    public void insertFragment(PuzzleFragment toInsert, Delta delta){
         pieces.addAll(toInsert.pieces);
-        getChildren().addAll(toInsert.pieces);
-
-        // inserts the pieces in the group in the right positions
-        for (PuzzlePiece piece2 : toInsert.pieces){
-            double relativeX = piece.getRelativeX(piece2);
-            double relativeY = piece.getRelativeY(piece2);
-            piece2.setLayoutX(piece.getLayoutX() - relativeX);
-            piece2.setLayoutY(piece.getLayoutY() - relativeY);
+        for (PuzzlePiece piece : toInsert.pieces){
+            piece.setOwningFragment(this);
+            piece.adjust(delta);
         }
 
-
-
-        // prevents the group from moving in the scene
-        Bounds boundsInScene2 = localToScene(getBoundsInLocal());
-        setTranslateX(getTranslateX() - ((boundsInScene.getCenterX() - boundsInScene2.getCenterX()) / getParent().getScaleX()));
-        setTranslateY(getTranslateY() - ((boundsInScene.getCenterY() - boundsInScene2.getCenterY()) / getParent().getScaleY()));
 
     }
 
@@ -100,7 +35,7 @@ public class PuzzleFragment extends Group {
         for (PuzzlePiece piece1 : pieces){
             for (PuzzlePiece piece2 : puzzleFragment.pieces){
                 Optional<Delta> delta = piece1.distance(piece2);
-
+System.out.println(delta);
                 if (delta.isPresent() && acceptable(delta.get())){
                     return delta;
                 }
@@ -115,5 +50,13 @@ public class PuzzleFragment extends Group {
 
     public List<PuzzlePiece> getPieces(){
         return Collections.unmodifiableList(pieces);
+    }
+
+    public void checkConnections() {
+        fromPuzzle.checkConnections(this);
+    }
+
+    public Puzzle getPuzzle() {
+        return fromPuzzle;
     }
 }

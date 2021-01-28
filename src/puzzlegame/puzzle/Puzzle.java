@@ -7,22 +7,23 @@ import javafx.scene.image.Image;
 import puzzlegame.puzzle.factors.Factor;
 import puzzlegame.puzzle.factors.Factors;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class Puzzle {
 
-    private final Image image;
-    private final ObservableList<PuzzleFragment> pieces;
+    private final ObservableList<PuzzleFragment> fragments;
+    private final List<PuzzlePiece> pieces;
     private final PuzzleTable onTable;
     private final BooleanBinding finished;
 
     public Puzzle(Image image, int numberOfPieces, PuzzleTable puzzleTable){
-        this.image = image;
-        pieces = FXCollections.observableArrayList();
+        fragments = FXCollections.observableArrayList();
+        pieces = new ArrayList<>();
         onTable = puzzleTable;
 
-        finished = new FinishedPuzzle(pieces);
+        finished = new FinishedPuzzle(fragments);
 
         Factor fact = (new Factors(numberOfPieces)).nearestRatioTo(image.getWidth()/image.getHeight());
 
@@ -32,31 +33,32 @@ public class Puzzle {
             for (int j = 0; j < fact.getY(); j++){
                 PuzzlePiece piece = new PuzzlePiece(image, size, new Position(i, j));
                 if (!piece.isInvisible()) {
-                    pieces.add(new PuzzleFragment(piece, this));
+                    pieces.add(piece);
+                    fragments.add(new PuzzleFragment(piece, this));
                 }
             }
         }
     }
 
 
-    public List<PuzzleFragment> getFragments() {
+    public List<PuzzlePiece> getPieces() {
         return pieces;
     }
 
     public void checkConnections(PuzzleFragment puzzleFragment) {
         Optional<Delta> delta = Optional.empty();
-        for (PuzzleFragment fragment : pieces){
+        for (PuzzleFragment fragment : fragments){
             if (fragment != puzzleFragment){
                 delta = fragment.connectsWith(puzzleFragment);
+                System.out.println(delta);
                 if (delta.isPresent()){
-                    fragment.insertFragment(puzzleFragment);
+                    fragment.insertFragment(puzzleFragment, delta.get());
                     break;
                 }
             }
         }
         if (delta.isPresent()){
-            pieces.remove(puzzleFragment);
-            onTable.remove(puzzleFragment);
+            fragments.remove(puzzleFragment);
         }
 
     }
@@ -67,10 +69,6 @@ public class Puzzle {
 
     public BooleanBinding finished() {
         return finished;
-    }
-
-    public Image getImage(){
-        return image;
     }
 
     private static class FinishedPuzzle extends BooleanBinding{
