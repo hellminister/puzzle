@@ -1,19 +1,26 @@
 package puzzlegame.puzzle;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import puzzlegame.PuzzleMain;
+import puzzlegame.puzzle.minimap.MiniMap;
 import puzzlegame.puzzle.victorypane.VictoryPane;
 import puzzlegame.util.Utilities;
 
@@ -27,6 +34,9 @@ public class PuzzleTable extends Scene {
     private final PuzzleMain puzzleGame;
 
     private final BooleanProperty puzzleFinished;
+
+    private final ImageView imageHint;
+    private final MiniMap miniMap;
 
     /**
      * Creates a Scene for a specific root Node.
@@ -64,16 +74,71 @@ public class PuzzleTable extends Scene {
         pane.setStyle("-fx-background-color: black");
         pane.setPannable(true);
 
-        borderPane.getChildren().addAll(pane);
+        var tableSide = new AnchorPane();
+        tableSide.getChildren().add(pane);
+
+        var topBar = new HBox();
+        topBar.setStyle("-fx-background-color: white");
+        topBar.setAlignment(Pos.BASELINE_LEFT);
+        topBar.setSpacing(3);
+
+
+        // Start zoom control section
+
+        Button zoomIn = new Button("+");
+        zoomIn.setOnAction(event ->  zoomIn());
+
+        Button zoomOut = new Button("-");
+        zoomOut.setOnAction(event -> zoomOut());
+
+        Label zoomValue = new Label();
+        zoomValue.textProperty().bind(Bindings.format("Zoom: %.0f%%", table.scaleXProperty().multiply(100)));
+
+        // End zoom control section
+
+
+
+        // start show image section
+
+        imageHint = new ImageView();
+        imageHint.setPreserveRatio(true);
+        imageHint.setFitWidth(400);
+        imageHint.setFitHeight(400);
+
+        tableSide.getChildren().add(imageHint);
+        AnchorPane.setTopAnchor(imageHint, 50.0);
+        AnchorPane.setLeftAnchor(imageHint, 50.0);
+
+        ToggleButton showImage = new ToggleButton("Display Image");
+        imageHint.visibleProperty().bind(showImage.selectedProperty());
+
+        // end show image section
+
+        // start mini map section
+
+        miniMap = new MiniMap(table, 400, 400);
+
+        tableSide.getChildren().add(miniMap);
+        AnchorPane.setTopAnchor(miniMap, 50.0);
+        AnchorPane.setRightAnchor(miniMap, 50.0);
+
+        ToggleButton showMiniMap = new ToggleButton("Show Minimap");
+        miniMap.visibleProperty().bind(showMiniMap.selectedProperty());
+
+
+        // end minimap section
+
+        topBar.getChildren().addAll(showMiniMap, showImage, zoomValue, zoomIn, zoomOut);
+
+
+        borderPane.getChildren().addAll(topBar, tableSide);
 
         table.setOnScroll(event -> {
             double scrollValue = event.getDeltaY();
             if (scrollValue < 0){
-                table.setScaleX(table.getScaleX()-0.01);
-                table.setScaleY(table.getScaleY()-0.01);
+                zoomOut();
             } else if (scrollValue > 0){
-                table.setScaleX(table.getScaleX()+0.01);
-                table.setScaleY(table.getScaleY()+0.01);
+                zoomIn();
             }
             event.consume();
         });
@@ -87,7 +152,8 @@ public class PuzzleTable extends Scene {
         });
 
         Utilities.attach(borderPane, root.widthProperty(), root.heightProperty());
-        Utilities.attach(pane, borderPane.widthProperty(), borderPane.heightProperty());
+        Utilities.attach(tableSide, borderPane.widthProperty(), borderPane.heightProperty().subtract(topBar.heightProperty()));
+        Utilities.attach(pane, tableSide.widthProperty(), tableSide.heightProperty());
         Utilities.attach(root, puzzleGame.getPrimaryStage().widthProperty(), puzzleGame.getPrimaryStage().heightProperty());
         Utilities.attach(victoryPane, root.widthProperty().multiply(0.75), root.heightProperty().multiply(0.75));
 
@@ -100,6 +166,16 @@ public class PuzzleTable extends Scene {
 
         });
 
+    }
+
+    private void zoomOut() {
+        table.setScaleX(table.getScaleX()-0.01);
+        table.setScaleY(table.getScaleY()-0.01);
+    }
+
+    private void zoomIn() {
+        table.setScaleX(table.getScaleX()+0.01);
+        table.setScaleY(table.getScaleY()+0.01);
     }
 
     public PuzzleMain getPuzzleGame() {
@@ -165,5 +241,7 @@ public class PuzzleTable extends Scene {
         pane.setHvalue(0.5);
 
         puzzleFinished.bind(puzzle.finished());
+        imageHint.setImage(chosenImage);
+        miniMap.populate(puzzle.getFragments());
     }
 }

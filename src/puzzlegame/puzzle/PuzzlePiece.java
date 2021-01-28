@@ -1,7 +1,11 @@
 package puzzlegame.puzzle;
 
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
@@ -15,6 +19,8 @@ public class PuzzlePiece extends StackPane {
     private final Position position;
     private final Size size;
     private final boolean invisible;
+    private final ParentTranslateXProperty parentTranslateXProperty;
+    private final ParentTranslateYProperty parentTranslateYProperty;
 
     /**
      * Allocates a new ImageView object using the given image.
@@ -22,6 +28,7 @@ public class PuzzlePiece extends StackPane {
      * @param image Image that this ImageView uses
      */
     public PuzzlePiece(Image image, Size size, Position position) {
+        super();
         ImageView iv = new ImageView(image);
         this.size = size;
         this.position = position;
@@ -42,8 +49,8 @@ public class PuzzlePiece extends StackPane {
         }
         invisible = inv;
         setPickOnBounds(false);
-
-
+        parentTranslateXProperty = new ParentTranslateXProperty(this);
+        parentTranslateYProperty = new ParentTranslateYProperty(this);
     }
 
     public boolean isInvisible() {
@@ -82,4 +89,72 @@ public class PuzzlePiece extends StackPane {
     public double getRelativeY(PuzzlePiece piece2) {
         return ((position.y() - piece2.position.y()) * size.y());
     }
+
+    public ParentTranslateXProperty parentTranslateXProperty() {
+        return parentTranslateXProperty;
+    }
+
+    public ParentTranslateYProperty parentTranslateYProperty() {
+        return parentTranslateYProperty;
+    }
+
+    public static abstract class ParentTranslateProperty extends DoubleBinding {
+
+        protected final Node node;
+        protected DoubleProperty translate;
+        protected Parent parent;
+
+        public ParentTranslateProperty(Node node) {
+            this.node = node;
+            bind(node.parentProperty());
+            parent = node.getParent();
+        }
+
+        @Override
+        protected double computeValue() {
+            if (parent != node.getParent()){
+                if (parent != null) {
+                    unbind(translate);
+                }
+                parent = node.getParent();
+                translate = translate();
+                bind(translate);
+            }
+
+            return translate.get();
+        }
+
+        protected abstract DoubleProperty translate();
+
+    }
+
+
+    public static class ParentTranslateXProperty extends ParentTranslateProperty {
+
+        public ParentTranslateXProperty(Node node) {
+            super(node);
+        }
+
+        @Override
+        protected DoubleProperty translate() {
+            return parent.translateXProperty();
+        }
+
+
+    }
+
+    public static class ParentTranslateYProperty extends ParentTranslateProperty {
+
+        public ParentTranslateYProperty(Node node) {
+            super(node);
+        }
+
+        @Override
+        protected DoubleProperty translate() {
+            return parent.translateYProperty();
+        }
+
+    }
+
+
 }

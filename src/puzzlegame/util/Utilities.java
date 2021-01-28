@@ -5,7 +5,7 @@ import javafx.scene.layout.Region;
 
 public interface Utilities {
 
-    public static void attach(Region pane, DoubleExpression width, DoubleExpression height){
+    static void attach(Region pane, DoubleExpression width, DoubleExpression height){
         pane.maxWidthProperty().bind(width);
         pane.minWidthProperty().bind(width);
         pane.prefWidthProperty().bind(width);

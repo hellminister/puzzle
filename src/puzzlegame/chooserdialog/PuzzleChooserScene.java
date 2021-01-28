@@ -92,7 +92,7 @@ public class PuzzleChooserScene extends Scene {
             return null;
         }));
 
-        nbPieces.bind((ObservableValue<? extends Number>) nbPieceGetter.getTextFormatter().valueProperty());
+        bindingNbPieces(nbPieceGetter);
 
         Label text = new Label();
         text.textProperty().bind(nbPieces.asString());
@@ -116,5 +116,22 @@ public class PuzzleChooserScene extends Scene {
         cancel.setOnAction(event -> pcd.close());
         lowerBox.getChildren().addAll(start, cancel);
         lowerBox.setAlignment(Pos.CENTER);
+    }
+
+    /**
+     * this method is to suppress the unchecked warning we get from the casting
+     * @param nbPieceGetter the field to bind
+     */
+    @SuppressWarnings("unchecked")
+    private void bindingNbPieces(TextField nbPieceGetter) {
+        nbPieceGetter.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), 4, change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("([1-9][0-9]*)?")) {
+                return change;
+            }
+            return null;
+        }));
+
+        nbPieces.bind((ObservableValue<? extends Number>) nbPieceGetter.getTextFormatter().valueProperty());
     }
 }

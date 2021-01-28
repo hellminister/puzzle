@@ -21,6 +21,7 @@ public class VictoryPane extends StackPane {
      *
      */
     public VictoryPane(PuzzleTable window) {
+        super();
         Image image = null;
         // victory image
         try (InputStream is = Files.newInputStream(Paths.get("src/resources/teamwork-3275565_1920.jpg"))) {
@@ -56,14 +57,10 @@ public class VictoryPane extends StackPane {
         splitA.getChildren().addAll(platePane, buttonBar);
 
         Button newPuzzle = new Button("Start New Puzzle");
-        newPuzzle.setOnAction(event -> {
-            window.getPuzzleGame().showPuzzleChooserDialog();
-        });
+        newPuzzle.setOnAction(event -> window.getPuzzleGame().showPuzzleChooserDialog());
 
         Button backToMain = new Button ("Back to Main menu");
-        backToMain.setOnAction(event -> {
-            window.getPuzzleGame().switchToStartScreen();
-        });
+        backToMain.setOnAction(event -> window.getPuzzleGame().switchToStartScreen());
 
         buttonBar.getChildren().addAll(newPuzzle, backToMain);
         buttonBar.setAlignment(Pos.CENTER);

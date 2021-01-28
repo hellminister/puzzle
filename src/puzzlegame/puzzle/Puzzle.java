@@ -69,6 +69,10 @@ public class Puzzle {
         return finished;
     }
 
+    public Image getImage(){
+        return image;
+    }
+
     private static class FinishedPuzzle extends BooleanBinding{
 
         private final ObservableList<PuzzleFragment> puzzle;

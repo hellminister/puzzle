@@ -1,7 +1,6 @@
 package puzzlegame.startscreen;
 
 import javafx.application.Platform;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -21,7 +20,6 @@ import java.nio.file.Paths;
 
 public class StartScreen extends Scene {
 
-    private final PuzzleMain mainWindow;
     private final PuzzleChooserDialog pcd;
 
     /**
@@ -30,7 +28,6 @@ public class StartScreen extends Scene {
      */
     public StartScreen(PuzzleMain mainWindow) {
         super(new StackPane());
-        this.mainWindow = mainWindow;
         pcd = new PuzzleChooserDialog(mainWindow);
 
         var root = (StackPane) getRoot();
@@ -66,9 +63,7 @@ public class StartScreen extends Scene {
         continueButton.disableProperty().bind(mainWindow.finishedPuzzleProperty());
 
         Button startNew = new Button("Start new puzzle");
-        startNew.setOnAction(event -> {
-            showPuzzleChooserDialog();
-        });
+        startNew.setOnAction(event -> showPuzzleChooserDialog());
 
         Button quit = new Button("Quit");
         quit.setOnAction(event -> Platform.exit());

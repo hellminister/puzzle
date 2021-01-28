@@ -11,6 +11,7 @@ public class PuzzleChooserDialog extends Stage {
 
 
     public PuzzleChooserDialog(PuzzleMain mainWindow){
+        super();
         puzzleGame = mainWindow;
         initOwner(mainWindow.getPrimaryStage());
         initModality(Modality.WINDOW_MODAL);
