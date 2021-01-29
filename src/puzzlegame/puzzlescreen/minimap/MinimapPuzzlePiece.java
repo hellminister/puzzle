@@ -1,8 +1,8 @@
-package puzzlegame.puzzle.minimap;
+package puzzlegame.puzzlescreen.minimap;
 
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
-import puzzlegame.puzzle.PuzzlePiece;
+import puzzlegame.puzzlescreen.puzzletable.PuzzlePiece;
 
 public class MinimapPuzzlePiece extends Group {
 

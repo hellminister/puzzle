@@ -1,4 +1,4 @@
-package puzzlegame.puzzle.factors;
+package puzzlegame.puzzlescreen.factors;
 
 public final class Factor implements Comparable<Factor>{
     

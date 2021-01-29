@@ -1,4 +1,4 @@
-package puzzlegame.puzzle.minimap;
+package puzzlegame.puzzlescreen.minimap;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -8,8 +8,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import puzzlegame.puzzle.PuzzlePiece;
-import puzzlegame.puzzle.PuzzleTable;
+import puzzlegame.puzzlescreen.puzzletable.PuzzlePiece;
+import puzzlegame.puzzlescreen.puzzletable.PuzzleTable;
 import puzzlegame.util.Utilities;
 
 import java.util.List;
@@ -58,7 +58,6 @@ public class MiniMap extends StackPane {
     private Rectangle makeViewport(PuzzleTable table) {
         final Rectangle viewport;
         viewport = new Rectangle();
-       // viewport.setFill(Color.BLUE);
         viewport.setStroke(Color.DARKSLATEGREY);
 
         ScrollPane tablePane = table.getPane();

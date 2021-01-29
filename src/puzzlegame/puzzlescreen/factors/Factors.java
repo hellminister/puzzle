@@ -1,4 +1,4 @@
-package puzzlegame.puzzle.factors;
+package puzzlegame.puzzlescreen.factors;
 
 import java.util.*;
 

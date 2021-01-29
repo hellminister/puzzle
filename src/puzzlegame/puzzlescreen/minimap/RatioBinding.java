@@ -1,4 +1,4 @@
-package puzzlegame.puzzle.minimap;
+package puzzlegame.puzzlescreen.minimap;
 
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ReadOnlyDoubleProperty;

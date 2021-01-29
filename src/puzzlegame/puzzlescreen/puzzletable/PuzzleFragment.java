@@ -1,4 +1,4 @@
-package puzzlegame.puzzle;
+package puzzlegame.puzzlescreen.puzzletable;
 
 import java.util.Collections;
 import java.util.LinkedList;

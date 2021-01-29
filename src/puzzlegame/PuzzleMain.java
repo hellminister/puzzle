@@ -4,13 +4,13 @@ import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import puzzlegame.puzzle.PuzzleTable;
+import puzzlegame.puzzlescreen.PuzzleScene;
 import puzzlegame.startscreen.StartScreen;
 
 public class PuzzleMain extends Application {
 
 
-    private PuzzleTable puzzleTable;
+    private PuzzleScene puzzleScene;
     private StartScreen startScreen;
 
     private Stage primaryStage;
@@ -19,7 +19,7 @@ public class PuzzleMain extends Application {
     public void start(Stage primaryStage){
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Hello World");
-        puzzleTable = new PuzzleTable(this);
+        puzzleScene = new PuzzleScene(this);
         startScreen = new StartScreen(this);
 
         primaryStage.setScene(startScreen);
@@ -36,7 +36,7 @@ public class PuzzleMain extends Application {
 
 
     public ObservableValue<Boolean> finishedPuzzleProperty() {
-        return puzzleTable.puzzleFinishedProperty();
+        return puzzleScene.puzzleFinishedProperty();
     }
 
     public Stage getPrimaryStage() {
@@ -44,11 +44,11 @@ public class PuzzleMain extends Application {
     }
 
     public void sendInfoToPuzzleTable(Image chosenImage, int nbPieces) {
-        puzzleTable.setNewPuzzle(chosenImage, nbPieces);
+        puzzleScene.setNewPuzzle(chosenImage, nbPieces);
     }
 
     public void switchToPuzzleTable() {
-        primaryStage.setScene(puzzleTable);
+        primaryStage.setScene(puzzleScene);
 
         // until i find a better way to have the scrollbars showing in maximized window
         if (primaryStage.isMaximized()){

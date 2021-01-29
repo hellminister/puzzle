@@ -1,11 +1,11 @@
-package puzzlegame.puzzle;
+package puzzlegame.puzzlescreen.puzzletable;
 
 import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
-import puzzlegame.puzzle.factors.Factor;
-import puzzlegame.puzzle.factors.Factors;
+import puzzlegame.puzzlescreen.factors.Factor;
+import puzzlegame.puzzlescreen.factors.Factors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +18,10 @@ public class Puzzle {
     private final PuzzleTable onTable;
     private final BooleanBinding finished;
 
-    public Puzzle(Image image, int numberOfPieces, PuzzleTable puzzleTable){
+    public Puzzle(Image image, int numberOfPieces, PuzzleTable puzzleScene){
         fragments = FXCollections.observableArrayList();
         pieces = new ArrayList<>();
-        onTable = puzzleTable;
+        onTable = puzzleScene;
 
         finished = new FinishedPuzzle(fragments);
 

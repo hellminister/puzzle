@@ -1,4 +1,4 @@
-package puzzlegame.puzzle.victorypane;
+package puzzlegame.puzzlescreen.victorypane;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -7,7 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import puzzlegame.puzzle.PuzzleTable;
+import puzzlegame.puzzlescreen.PuzzleScene;
 import puzzlegame.util.Utilities;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class VictoryPane extends StackPane {
      * Creates a Scene for a specific root Node.
      *
      */
-    public VictoryPane(PuzzleTable window) {
+    public VictoryPane(PuzzleScene window) {
         super();
         Image image = null;
         // victory image

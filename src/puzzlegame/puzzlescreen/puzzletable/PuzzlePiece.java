@@ -1,4 +1,4 @@
-package puzzlegame.puzzle;
+package puzzlegame.puzzlescreen.puzzletable;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
