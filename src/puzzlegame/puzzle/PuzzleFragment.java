@@ -11,8 +11,6 @@ public class PuzzleFragment {
     private final Puzzle fromPuzzle;
 
 
-
-
     public PuzzleFragment(PuzzlePiece puzzlePiece, Puzzle puzzle) {
         super();
         pieces = new LinkedList<>();
@@ -35,7 +33,6 @@ public class PuzzleFragment {
         for (PuzzlePiece piece1 : pieces){
             for (PuzzlePiece piece2 : puzzleFragment.pieces){
                 Optional<Delta> delta = piece1.distance(piece2);
-System.out.println(delta);
                 if (delta.isPresent() && acceptable(delta.get())){
                     return delta;
                 }

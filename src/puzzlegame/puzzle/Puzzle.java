@@ -50,7 +50,6 @@ public class Puzzle {
         for (PuzzleFragment fragment : fragments){
             if (fragment != puzzleFragment){
                 delta = fragment.connectsWith(puzzleFragment);
-                System.out.println(delta);
                 if (delta.isPresent()){
                     fragment.insertFragment(puzzleFragment, delta.get());
                     break;

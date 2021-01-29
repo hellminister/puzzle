@@ -6,6 +6,7 @@ import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -69,7 +70,8 @@ public class PuzzleTable extends Scene {
         pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         pane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
-        pane.setContent(table);
+        //table put inside a group first to help with zoom and panning
+        pane.setContent(new Group(table));
 
         pane.setStyle("-fx-background-color: black");
         pane.setPannable(true);
@@ -116,7 +118,7 @@ public class PuzzleTable extends Scene {
 
         // start mini map section
 
-        miniMap = new MiniMap(table, 400, 400);
+        miniMap = new MiniMap(this, 400, 400);
 
         tableSide.getChildren().add(miniMap);
         AnchorPane.setTopAnchor(miniMap, 50.0);
@@ -183,7 +185,6 @@ public class PuzzleTable extends Scene {
     }
 
     public void resizeTable(Bounds position){
-        System.out.println(position);
 
         if (position.getMinX() < 0){
             table.setMinWidth(table.getWidth() - position.getMinX());
@@ -233,11 +234,23 @@ public class PuzzleTable extends Scene {
 
         pane.layout();
 
-        pane.setVvalue(0.5);
-        pane.setHvalue(0.5);
+        setTablePosition(0.5, 0.5);
 
         puzzleFinished.bind(puzzle.finished());
         imageHint.setImage(chosenImage);
         miniMap.populate(puzzle.getPieces());
+    }
+
+    public StackPane getTable() {
+        return table;
+    }
+
+    public void setTablePosition(double vValue, double hValue){
+        pane.setHvalue(hValue);
+        pane.setVvalue(vValue);
+    }
+
+    public ScrollPane getPane() {
+        return pane;
     }
 }
