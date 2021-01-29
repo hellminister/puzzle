@@ -16,6 +16,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.util.converter.IntegerStringConverter;
+import puzzlegame.language.Localize;
 
 import java.io.*;
 
@@ -61,11 +62,12 @@ public class PuzzleChooserScene extends Scene {
 
         var fc = new FileChooser();
         fc.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("All Images", "*.jpg", "*.gif", "*.png")
+                new FileChooser.ExtensionFilter("Images", "*.jpg", "*.gif", "*.png")
         );
         fc.setSelectedExtensionFilter(fc.getExtensionFilters().get(0));
 
         Button imageChooser = new Button("Choose Image");
+        imageChooser.textProperty().bind(Localize.get(Localize.Target.PUZZLE_CHOOSER_SCENE_CHOOSE_IMAGE));
         imageChooser.setOnAction(event -> {
             File file = fc.showOpenDialog(pcd);
             if (file != null){
@@ -97,13 +99,16 @@ public class PuzzleChooserScene extends Scene {
         Label text = new Label();
         text.textProperty().bind(nbPieces.asString());
 
+        Label chooseNbPieceText = new Label();
+        chooseNbPieceText.textProperty().bind(Localize.get(Localize.Target.PUZZLE_CHOOSER_SCENE_NB_PIECE_TEXT));
 
-        rightSide.getChildren().addAll(imageChooser, new Label("Number of pieces"), nbPieceGetter);
+        rightSide.getChildren().addAll(imageChooser, chooseNbPieceText, nbPieceGetter);
         rightSide.setAlignment(Pos.CENTER);
 
 
 
-        Button start = new Button("Start");
+        Button start = new Button();
+        start.textProperty().bind(Localize.get(Localize.Target.PUZZLE_CHOOSER_SCENE_START));
         start.setOnAction(event -> {
             if (chosenImage != null && nbPieces.get() > 1){
                 pcd.sendInfoToPuzzleTable(chosenImage, nbPieces.get());
@@ -112,7 +117,8 @@ public class PuzzleChooserScene extends Scene {
             }
         });
 
-        Button cancel = new Button("Cancel");
+        Button cancel = new Button();
+        cancel.textProperty().bind(Localize.get(Localize.Target.PUZZLE_CHOOSER_SCENE_CANCEL));
         cancel.setOnAction(event -> pcd.close());
         lowerBox.getChildren().addAll(start, cancel);
         lowerBox.setAlignment(Pos.CENTER);

@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import puzzlegame.PuzzleMain;
+import puzzlegame.language.Localize;
 import puzzlegame.puzzlescreen.minimap.MiniMap;
 import puzzlegame.puzzlescreen.puzzletable.PuzzleTable;
 import puzzlegame.puzzlescreen.victorypane.VictoryPane;
@@ -70,7 +71,7 @@ public class PuzzleScene extends Scene {
         zoomOut.setOnAction(event -> puzzleTable.zoomOut());
 
         Label zoomValue = new Label();
-        zoomValue.textProperty().bind(Bindings.format("Zoom: %.0f%%", puzzleTable.getZoom().multiply(100)));
+        zoomValue.textProperty().bind(Bindings.format("%s %.0f%%", Localize.get(Localize.Target.PUZZLE_SCENE_ZOOM), puzzleTable.getZoom().multiply(100)));
 
         // End zoom control section
 
@@ -87,7 +88,8 @@ public class PuzzleScene extends Scene {
         AnchorPane.setTopAnchor(imageHint, 50.0);
         AnchorPane.setLeftAnchor(imageHint, 50.0);
 
-        ToggleButton showImage = new ToggleButton("Display Image");
+        ToggleButton showImage = new ToggleButton();
+        showImage.textProperty().bind(Localize.get(Localize.Target.PUZZLE_SCENE_SHOW_IMAGE));
         imageHint.visibleProperty().bind(showImage.selectedProperty());
 
         // end show image section
@@ -100,7 +102,8 @@ public class PuzzleScene extends Scene {
         AnchorPane.setTopAnchor(miniMap, 50.0);
         AnchorPane.setRightAnchor(miniMap, 50.0);
 
-        ToggleButton showMiniMap = new ToggleButton("Show Minimap");
+        ToggleButton showMiniMap = new ToggleButton();
+        showMiniMap.textProperty().bind(Localize.get(Localize.Target.PUZZLE_SCENE_SHOW_MINIMAP));
         miniMap.visibleProperty().bind(showMiniMap.selectedProperty());
 
 

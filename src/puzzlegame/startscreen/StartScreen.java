@@ -10,6 +10,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import puzzlegame.PuzzleMain;
 import puzzlegame.chooserdialog.PuzzleChooserDialog;
+import puzzlegame.language.Localize;
 import puzzlegame.util.Utilities;
 
 import java.io.IOException;
@@ -17,14 +18,17 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-
+/**
+ * The main menu of the game
+ */
 public class StartScreen extends Scene {
 
+    /** The puzzle chooser dialog window*/
     private final PuzzleChooserDialog pcd;
 
     /**
-     * Creates a Scene for a specific root Node.
-     *
+     * Creates the start screen scene
+     * @param mainWindow The application object creating this
      */
     public StartScreen(PuzzleMain mainWindow) {
         super(new StackPane());
@@ -58,14 +62,18 @@ public class StartScreen extends Scene {
 
         var buttonBar = new VBox();
 
-        Button continueButton = new Button("Continue");
+        // this button is available only when there's an unfinished puzzle
+        Button continueButton = new Button();
+        continueButton.textProperty().bind(Localize.get(Localize.Target.START_SCREEN_CONTINUE));
         continueButton.setOnAction(event -> mainWindow.switchToPuzzleTable());
         continueButton.disableProperty().bind(mainWindow.finishedPuzzleProperty());
 
-        Button startNew = new Button("Start new puzzle");
+        Button startNew = new Button();
+        startNew.textProperty().bind(Localize.get(Localize.Target.START_SCREEN_START_NEW));
         startNew.setOnAction(event -> showPuzzleChooserDialog());
 
-        Button quit = new Button("Quit");
+        Button quit = new Button();
+        quit.textProperty().bind(Localize.get(Localize.Target.START_SCREEN_QUIT));
         quit.setOnAction(event -> Platform.exit());
 
         buttonBar.getChildren().addAll(continueButton, startNew, quit);
@@ -78,6 +86,9 @@ public class StartScreen extends Scene {
         Utilities.attach(backgroundImagePane, mainWindow.getPrimaryStage().widthProperty(), mainWindow.getPrimaryStage().heightProperty());
     }
 
+    /**
+     * Calls up the puzzle chooser dialog
+     */
     public void showPuzzleChooserDialog(){
         pcd.show();
     }

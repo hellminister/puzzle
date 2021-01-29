@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import puzzlegame.language.Localize;
 import puzzlegame.puzzlescreen.PuzzleScene;
 import puzzlegame.util.Utilities;
 
@@ -56,10 +57,12 @@ public class VictoryPane extends StackPane {
 
         splitA.getChildren().addAll(platePane, buttonBar);
 
-        Button newPuzzle = new Button("Start New Puzzle");
+        Button newPuzzle = new Button();
+        newPuzzle.textProperty().bind(Localize.get(Localize.Target.VICTORY_PANE_NEW_PUZZLE));
         newPuzzle.setOnAction(event -> window.getPuzzleGame().showPuzzleChooserDialog());
 
-        Button backToMain = new Button ("Back to Main menu");
+        Button backToMain = new Button ();
+        backToMain.textProperty().bind(Localize.get(Localize.Target.VICTORY_PANE_BACK_TO_MAIN));
         backToMain.setOnAction(event -> window.getPuzzleGame().switchToStartScreen());
 
         buttonBar.getChildren().addAll(newPuzzle, backToMain);

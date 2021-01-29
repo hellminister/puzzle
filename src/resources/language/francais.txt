@@ -1,0 +1,13 @@
+GAME_TITLE Brise-Tête
+START_SCREEN_CONTINUE Continuer
+START_SCREEN_START_NEW Commencer un nouveau casse-tête
+START_SCREEN_QUIT Quitter
+PUZZLE_SCENE_ZOOM Grossissement:
+PUZZLE_SCENE_SHOW_IMAGE Afficher l'image
+PUZZLE_SCENE_SHOW_MINIMAP Afficher la mini-carte
+VICTORY_PANE_NEW_PUZZLE Commencer un nouveau casse-tête
+VICTORY_PANE_BACK_TO_MAIN Retour au menu principal
+PUZZLE_CHOOSER_SCENE_CHOOSE_IMAGE Choisir l'image
+PUZZLE_CHOOSER_SCENE_NB_PIECE_TEXT Nombre de morceaux
+PUZZLE_CHOOSER_SCENE_START Commencer
+PUZZLE_CHOOSER_SCENE_CANCEL Annuler
