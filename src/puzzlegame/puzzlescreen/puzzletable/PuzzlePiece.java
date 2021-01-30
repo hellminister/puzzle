@@ -1,13 +1,21 @@
 package puzzlegame.puzzlescreen.puzzletable;
 
 import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.SVGPath;
+import javafx.scene.shape.Shape;
+import puzzlegame.util.Utilities;
 
 import java.util.Optional;
 
@@ -17,6 +25,9 @@ public class PuzzlePiece extends StackPane {
     private final Size size;
     private final boolean invisible;
     private PuzzleFragment inFragment;
+    private final SVGPath pieceShape;
+    private final double clipXCorrection;
+    private final double clipYCorrection;
 
     private double lastMouseX;
     private double lastMouseY;
@@ -26,35 +37,55 @@ public class PuzzlePiece extends StackPane {
      *
      * @param image Image that this ImageView uses
      */
-    public PuzzlePiece(Image image, Size size, Position position) {
+    public PuzzlePiece(Image image, Size size, Position position, SVGPath shape) {
         super();
+        pieceShape = shape;
         ImageView iv = new ImageView(image);
         this.size = size;
         this.position = position;
-        Rectangle2D viewport = new Rectangle2D(position.x() * size.x(), position.y() * size.y(), size.x(), size.y());
-        iv.setViewport(viewport);
-        getChildren().add(iv);
 
-        setMinSize(size.x(),size.y());
-        setPrefSize(size.x(),size.y());
-        setMaxSize(size.x(),size.y());
+        clipXCorrection = size.x()/5;
+        clipYCorrection = size.y()/5;
+
+        Rectangle2D viewport = new Rectangle2D(position.x() * size.x() - clipXCorrection, position.y() * size.y() - clipYCorrection, size.x() + (clipXCorrection)*2, size.y() + (clipYCorrection)*2);
+        iv.setViewport(viewport);
+
+        shape.setFill(Color.BLUE);
+        shape.setStroke(Color.GREENYELLOW);
+
+        shape.setTranslateX(clipXCorrection);
+        shape.setTranslateY(clipYCorrection);
+
+        iv.setClip(shape);
+
+        getChildren().addAll(iv);
+      //  shape.toFront();
+
+        setMinSize(size.x() + (size.x()/5)*2, size.y() + (size.y()/5)*2);
+        setPrefSize(size.x() + (size.x()/5)*2, size.y() + (size.y()/5)*2);
+        setMaxSize(size.x() + (size.x()/5)*2, size.y() + (size.y()/5)*2);
 
         PixelReader pr = image.getPixelReader();
         boolean inv = true;
         for (int i = (int) viewport.getMinX(); i < viewport.getMaxX(); i++){
             for (int j = (int) viewport.getMinY(); j < viewport.getMaxY(); j++){
-                Color col = pr.getColor(i, j);
-                if (col.getOpacity() != 0){
-                    inv = false;
-                    break;
+                if (j >= 0 && i >= 0 && i < image.getWidth() && j < image.getHeight()) {
+                    Color col = pr.getColor(i, j);
+                    if (col.getOpacity() != 0) {
+                        inv = false;
+                        break;
+                    }
                 }
             }
         }
         invisible = inv;
         setPickOnBounds(false);
 
+        setActions();
 
+    }
 
+    private void setActions() {
         setOnMousePressed(event -> {
             if (event.getButton() == MouseButton.PRIMARY) {
 
@@ -90,17 +121,11 @@ public class PuzzlePiece extends StackPane {
                     piece.moveDragged(deltaX, deltaY);
                 }
 
-
                 lastMouseX = event.getScreenX();
                 lastMouseY = event.getScreenY();
-
-
-
-
                 event.consume();
             }
         });
-
     }
 
     public void moveDragged(double deltaX, double deltaY){
@@ -151,5 +176,17 @@ public class PuzzlePiece extends StackPane {
     public void adjust(Delta delta) {
         setTranslateX(getTranslateX() + delta.x());
         setTranslateY(getTranslateY() + delta.y());
+    }
+
+    public SVGPath getPieceShape() {
+        return pieceShape;
+    }
+
+    public double getClipXCorrection() {
+        return clipXCorrection;
+    }
+
+    public double getClipYCorrection() {
+        return clipYCorrection;
     }
 }

@@ -4,8 +4,10 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
+import javafx.scene.shape.SVGPath;
 import puzzlegame.puzzlescreen.factors.Factor;
 import puzzlegame.puzzlescreen.factors.Factors;
+import puzzlegame.puzzlescreen.puzzletable.puzzlepiece.PuzzleMaker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +31,24 @@ public class Puzzle {
 
         Size size = new Size(image.getWidth()/fact.getX(), image.getHeight()/fact.getY());
 
-        for (int i = 0; i < fact.getX(); i++){
-            for (int j = 0; j < fact.getY(); j++){
-                PuzzlePiece piece = new PuzzlePiece(image, size, new Position(i, j));
-                if (!piece.isInvisible()) {
+        var piecesTemp = PuzzleMaker.makePuzzle(image, numberOfPieces);
+
+        for (PuzzlePiece piece : piecesTemp){
+            if (!piece.isInvisible()) {
                     pieces.add(piece);
                     fragments.add(new PuzzleFragment(piece, this));
                 }
-            }
         }
+
+//        for (int i = 0; i < fact.getX(); i++){
+//            for (int j = 0; j < fact.getY(); j++){
+//                PuzzlePiece piece = new PuzzlePiece(image, size, new Position(i, j));
+//                if (!piece.isInvisible()) {
+//                    pieces.add(piece);
+//                    fragments.add(new PuzzleFragment(piece, this));
+//                }
+//            }
+//        }
     }
 
 
