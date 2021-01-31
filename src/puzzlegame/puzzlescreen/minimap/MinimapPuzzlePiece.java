@@ -5,7 +5,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import puzzlegame.puzzlescreen.puzzletable.PuzzlePiece;
-import puzzlegame.util.svgpath.SVGPathUtilities;
+import puzzlegame.puzzlescreen.puzzletable.puzzlepiece.svgpath.SVGPathUtilities;
 
 public class MinimapPuzzlePiece extends Group {
 

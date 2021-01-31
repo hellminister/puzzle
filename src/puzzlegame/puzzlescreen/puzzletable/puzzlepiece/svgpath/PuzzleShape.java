@@ -1,4 +1,4 @@
-package puzzlegame.puzzlescreen.puzzletable.puzzlepiece;
+package puzzlegame.puzzlescreen.puzzletable.puzzlepiece.svgpath;
 
 import javafx.scene.shape.SVGPath;
 import puzzlegame.puzzlescreen.factors.Factor;
@@ -25,7 +25,7 @@ class PuzzleShape {
         if (y < fact.getY() - 1) {
             bottomPath = new VLineDrawer(size, LineDrawer.Direction.HORIZONTAL); // TODO draw the bottom line
         } else {
-            bottomPath = new StraightLineDrawer(size, LineDrawer.Direction.HORIZONTAL);; // draw a straight line
+            bottomPath = new StraightLineDrawer(size, LineDrawer.Direction.HORIZONTAL); // draw a straight line
         }
 
         // left

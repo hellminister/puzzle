@@ -1,7 +1,6 @@
-package puzzlegame.puzzlescreen.puzzletable.puzzlepiece;
+package puzzlegame.puzzlescreen.puzzletable.puzzlepiece.svgpath;
 
 import puzzlegame.puzzlescreen.puzzletable.Size;
-import puzzlegame.util.svgpath.SVGPathUtilities;
 
 import java.util.*;
 
@@ -48,7 +47,7 @@ public abstract class LineDrawer {
         private final int adjustY;
         private final boolean invert;
 
-        private Side(int x, int y, boolean inv){
+        Side(int x, int y, boolean inv){
             adjustX = x;
             adjustY = y;
             invert = inv;
@@ -68,28 +67,24 @@ public abstract class LineDrawer {
     }
 
     protected static class Command{
-        private final String command;
-        private final List<Point> points;
+        private final Operators command;
+        private final List<SVGPoint> points;
 
-        public Command(String command, Point... points){
+        public Command(Operators command, SVGPoint... points){
             this.command = command;
             this.points = (Arrays.asList(points));
         }
 
         public String adjustedCommand(Size size, Side side){
-            StringBuilder commandline = new StringBuilder(command);
+            StringBuilder commandline = new StringBuilder(command.name());
 
-            for (Point point : points){
+            for (SVGPoint point : points){
                 commandline.append(" ").append(point.x() + side.adjustXValue(size)).append(" ").append(point.y() + side.adjustYValue(size));
             }
 
             return commandline.toString();
         }
 
-        public boolean isM() {
-            return command.equals("M");
-        }
     }
 
-    public record Point(double x, double y){}
 }

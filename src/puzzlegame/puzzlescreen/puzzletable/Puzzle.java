@@ -4,10 +4,9 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
-import javafx.scene.shape.SVGPath;
 import puzzlegame.puzzlescreen.factors.Factor;
 import puzzlegame.puzzlescreen.factors.Factors;
-import puzzlegame.puzzlescreen.puzzletable.puzzlepiece.PuzzleMaker;
+import puzzlegame.puzzlescreen.puzzletable.puzzlepiece.svgpath.PuzzleMaker;
 
 import java.util.ArrayList;
 import java.util.List;

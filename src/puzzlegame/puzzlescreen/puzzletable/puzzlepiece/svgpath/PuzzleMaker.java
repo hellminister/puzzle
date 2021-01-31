@@ -1,4 +1,4 @@
-package puzzlegame.puzzlescreen.puzzletable.puzzlepiece;
+package puzzlegame.puzzlescreen.puzzletable.puzzlepiece.svgpath;
 
 import javafx.scene.image.Image;
 import puzzlegame.puzzlescreen.factors.Factor;
@@ -10,10 +10,10 @@ import puzzlegame.puzzlescreen.puzzletable.Size;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PuzzleMaker {
+public final class PuzzleMaker {
 
 
-    public PuzzleMaker(){
+    private PuzzleMaker(){
 
     }
 

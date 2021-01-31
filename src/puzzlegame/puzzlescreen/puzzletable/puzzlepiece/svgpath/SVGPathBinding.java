@@ -1,17 +1,16 @@
-package puzzlegame.util.svgpath;
+package puzzlegame.puzzlescreen.puzzletable.puzzlepiece.svgpath;
 
 import javafx.beans.binding.StringBinding;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import puzzlegame.puzzlescreen.minimap.RatioBinding;
-import puzzlegame.puzzlescreen.puzzletable.puzzlepiece.LineDrawer;
-
-import java.util.LinkedList;
 
 public class SVGPathBinding extends StringBinding {
 
-    private final SVGPathUtilities.Result path;
+    private final SVGPathDescription path;
     private final RatioBinding ratio;
 
-    public SVGPathBinding(SVGPathUtilities.Result parsed, RatioBinding ratio){
+    public SVGPathBinding(SVGPathDescription parsed, RatioBinding ratio){
         super();
         bind(ratio);
         path = parsed;
@@ -28,12 +27,12 @@ public class SVGPathBinding extends StringBinding {
      */
     @Override
     protected String computeValue() {
-        LinkedList<LineDrawer.Point> newPoints = new LinkedList<>();
+        ObservableList<SVGPoint> newPoints = FXCollections.observableArrayList();
 
-        for (LineDrawer.Point point : path.points()){
-            newPoints.add(new LineDrawer.Point(point.x() / ratio.get(), point.y() / ratio.get()));
+        for (SVGPoint point : path.points()){
+            newPoints.add(new SVGPoint(point.x() / ratio.get(), point.y() / ratio.get()));
         }
 
-        return SVGPathUtilities.generate(new SVGPathUtilities.Result(path.operators(), newPoints));
+        return SVGPathUtilities.generate(new SVGPathDescription(path.operators(), newPoints));
     }
 }

@@ -1,7 +1,7 @@
 package puzzlegame.puzzlescreen.puzzletable.puzzlepiece;
 
 import org.junit.jupiter.api.Test;
-import puzzlegame.util.svgpath.SVGPathUtilities;
+import puzzlegame.puzzlescreen.puzzletable.puzzlepiece.svgpath.SVGPathUtilities;
 
 import static org.junit.jupiter.api.Assertions.*;
 
