@@ -1,21 +1,17 @@
 package puzzlegame.puzzlescreen.puzzletable;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Bounds;
-import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
-import javafx.scene.shape.Shape;
-import puzzlegame.util.Utilities;
 
 import java.util.Optional;
 
@@ -26,8 +22,8 @@ public class PuzzlePiece extends StackPane {
     private final boolean invisible;
     private PuzzleFragment inFragment;
     private final SVGPath pieceShape;
-    private final double clipXCorrection;
-    private final double clipYCorrection;
+    private final DoubleProperty clipXCorrection;
+    private final DoubleProperty clipYCorrection;
 
     private double lastMouseX;
     private double lastMouseY;
@@ -44,17 +40,18 @@ public class PuzzlePiece extends StackPane {
         this.size = size;
         this.position = position;
 
-        clipXCorrection = size.x()/5;
-        clipYCorrection = size.y()/5;
+        clipXCorrection = new SimpleDoubleProperty(size.x()/5);
+        clipYCorrection = new SimpleDoubleProperty(size.y()/5);
 
-        Rectangle2D viewport = new Rectangle2D(position.x() * size.x() - clipXCorrection, position.y() * size.y() - clipYCorrection, size.x() + (clipXCorrection)*2, size.y() + (clipYCorrection)*2);
+        Rectangle2D viewport = new Rectangle2D(position.x() * size.x() - clipXCorrection.get(), position.y() * size.y() - clipYCorrection.get(), size.x() + (clipXCorrection.get())*2,
+                size.y() + (clipYCorrection.get())*2);
         iv.setViewport(viewport);
 
         shape.setFill(Color.BLUE);
         shape.setStroke(Color.GREENYELLOW);
 
-        shape.setTranslateX(clipXCorrection);
-        shape.setTranslateY(clipYCorrection);
+        shape.translateXProperty().bind(clipXCorrection);
+        shape.translateYProperty().bind(clipYCorrection);
 
         iv.setClip(shape);
 
@@ -182,11 +179,11 @@ public class PuzzlePiece extends StackPane {
         return pieceShape;
     }
 
-    public double getClipXCorrection() {
+    public ReadOnlyDoubleProperty clipXCorrectionProperty() {
         return clipXCorrection;
     }
 
-    public double getClipYCorrection() {
+    public ReadOnlyDoubleProperty clipYCorrectionProperty() {
         return clipYCorrection;
     }
 }

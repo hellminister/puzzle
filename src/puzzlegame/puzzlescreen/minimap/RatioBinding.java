@@ -4,7 +4,7 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.layout.StackPane;
 
-class RatioBinding extends DoubleBinding {
+public class RatioBinding extends DoubleBinding {
 
     private final DoubleBinding heightRatio;
     private final DoubleBinding widthRatio;

@@ -1,10 +1,13 @@
-package puzzlegame.puzzlescreen.puzzletable.puzzlepiece;
+package puzzlegame.util.svgpath;
+
+import puzzlegame.puzzlescreen.minimap.RatioBinding;
+import puzzlegame.puzzlescreen.puzzletable.puzzlepiece.LineDrawer;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Set;
 
-public class ReverseSVGPath {
+public class SVGPathUtilities {
 
     public static void main(String[] args) {
 
@@ -41,6 +44,12 @@ public class ReverseSVGPath {
         return generate(parsed);
     }
 
+    public static SVGPathBinding adjustableSize(String path, RatioBinding ratio){
+        Result parsed = parse(path);
+
+        return new SVGPathBinding(parsed, ratio);
+    }
+
     private static final Set<String> acceptedOperators = Set.of("M", "m", "L", "l", "H", "h", "V", "v", "C", "c", "S", "s", "Q", "q", "T", "t", "Z", "z");
     private static Result parse(String toParse){
         LinkedList<Operators> operators = new LinkedList<>();
@@ -68,7 +77,7 @@ public class ReverseSVGPath {
         return new Result(operators, points);
     }
 
-    private static String generate(Result data){
+    static String generate(Result data){
         StringBuilder build = new StringBuilder();
 
         for (Operators operator : data.operators()){
@@ -88,7 +97,7 @@ public class ReverseSVGPath {
         return ps;
     }
 
-    private record Result(LinkedList<Operators> operators, LinkedList<LineDrawer.Point> points){}
+    record Result(LinkedList<Operators> operators, LinkedList<LineDrawer.Point> points){}
 
     @SuppressWarnings("unused")
     private enum Operators{

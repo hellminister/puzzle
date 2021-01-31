@@ -40,15 +40,6 @@ public class Puzzle {
                 }
         }
 
-//        for (int i = 0; i < fact.getX(); i++){
-//            for (int j = 0; j < fact.getY(); j++){
-//                PuzzlePiece piece = new PuzzlePiece(image, size, new Position(i, j));
-//                if (!piece.isInvisible()) {
-//                    pieces.add(piece);
-//                    fragments.add(new PuzzleFragment(piece, this));
-//                }
-//            }
-//        }
     }
 
 

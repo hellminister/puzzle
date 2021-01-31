@@ -1,7 +1,7 @@
 package puzzlegame.puzzlescreen.puzzletable.puzzlepiece;
 
-import javafx.scene.shape.SVGPath;
 import puzzlegame.puzzlescreen.puzzletable.Size;
+import puzzlegame.util.svgpath.SVGPathUtilities;
 
 import java.util.*;
 
@@ -23,7 +23,7 @@ public abstract class LineDrawer {
         String result = commandline.toString().strip();
 
         if (side.isInvert()){
-            result = ReverseSVGPath.inverse(result);
+            result = SVGPathUtilities.inverse(result);
         }
 
         return stripM(result);
@@ -91,5 +91,5 @@ public abstract class LineDrawer {
         }
     }
 
-    protected record Point(double x, double y){}
+    public record Point(double x, double y){}
 }

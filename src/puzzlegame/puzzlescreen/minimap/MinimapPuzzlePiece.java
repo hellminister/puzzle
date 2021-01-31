@@ -5,6 +5,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import puzzlegame.puzzlescreen.puzzletable.PuzzlePiece;
+import puzzlegame.util.svgpath.SVGPathUtilities;
 
 public class MinimapPuzzlePiece extends Group {
 
@@ -20,13 +21,12 @@ public class MinimapPuzzlePiece extends Group {
         me.setViewport(original.getViewport());
 
         SVGPath clip = new SVGPath();
-        clip.setContent(piece.getPieceShape().getContent());
+        clip.contentProperty().bind(SVGPathUtilities.adjustableSize(piece.getPieceShape().getContent(), ratio));
         clip.setFill(Color.BLUE);
         clip.setStroke(Color.GREENYELLOW);
-        clip.setTranslateX(piece.getClipXCorrection());
-        clip.setTranslateY(piece.getClipYCorrection());
-        clip.scaleXProperty().bind(ratio);
-        clip.scaleYProperty().bind(ratio);
+        clip.translateXProperty().bind(piece.clipXCorrectionProperty().divide(ratio));
+        clip.translateYProperty().bind(piece.clipYCorrectionProperty().divide(ratio));
+
 
         me.setClip(clip);
 
