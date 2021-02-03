@@ -1,14 +1,15 @@
 package puzzlegame.puzzlescreen.puzzletable.puzzlepiece.svgpath;
 
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import puzzlegame.puzzlescreen.minimap.RatioBinding;
 
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.Set;
 
+
+//Does not work with at least T and maybe S
+//The algorithm is flawed, seems to work with M L C Q at least
 public class SVGPathUtilities {
 
     public static void main(String[] args) {
@@ -56,7 +57,6 @@ public class SVGPathUtilities {
         return new SVGPathBinding(parsed, ratio);
     }
 
-    private static final Set<String> acceptedOperators = Set.of("M", "m", "L", "l", "H", "h", "V", "v", "C", "c", "S", "s", "Q", "q", "T", "t", "Z", "z");
     private static SVGPathDescription parse(String toParse){
         ObservableList<Operators> operators = FXCollections.observableArrayList();
         ObservableList<SVGPoint> points = FXCollections.observableArrayList();
@@ -65,7 +65,7 @@ public class SVGPathUtilities {
 
         Double x = null;
         for (String s : splitted){
-            if (acceptedOperators.contains(s)){
+            if (Operators.isOperator(s)){
                 operators.add(Operators.valueOf(s));
                 if (x != null){
                     points.add(new SVGPoint(x,0));

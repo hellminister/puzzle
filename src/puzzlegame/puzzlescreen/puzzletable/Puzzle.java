@@ -4,8 +4,6 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
-import puzzlegame.puzzlescreen.factors.Factor;
-import puzzlegame.puzzlescreen.factors.Factors;
 import puzzlegame.puzzlescreen.puzzletable.puzzlepiece.svgpath.PuzzleMaker;
 
 import java.util.ArrayList;
@@ -25,10 +23,6 @@ public class Puzzle {
         onTable = puzzleScene;
 
         finished = new FinishedPuzzle(fragments);
-
-        Factor fact = (new Factors(numberOfPieces)).nearestRatioTo(image.getWidth()/image.getHeight());
-
-        Size size = new Size(image.getWidth()/fact.getX(), image.getHeight()/fact.getY());
 
         var piecesTemp = PuzzleMaker.makePuzzle(image, numberOfPieces);
 

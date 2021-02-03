@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import puzzlegame.PuzzleMain;
 import puzzlegame.chooserdialog.PuzzleChooserDialog;
 import puzzlegame.language.Localize;
+import puzzlegame.settingsdialog.SettingsDialog;
 import puzzlegame.util.Utilities;
 
 import java.io.IOException;
@@ -26,6 +27,8 @@ public class StartScreen extends Scene {
     /** The puzzle chooser dialog window*/
     private final PuzzleChooserDialog pcd;
 
+    private final SettingsDialog settingsDialog;
+
     /**
      * Creates the start screen scene
      * @param mainWindow The application object creating this
@@ -33,6 +36,7 @@ public class StartScreen extends Scene {
     public StartScreen(PuzzleMain mainWindow) {
         super(new StackPane());
         pcd = new PuzzleChooserDialog(mainWindow);
+        settingsDialog = new SettingsDialog(mainWindow);
 
         var root = (StackPane) getRoot();
         root.setStyle("-fx-background-color: black");
@@ -72,11 +76,15 @@ public class StartScreen extends Scene {
         startNew.textProperty().bind(Localize.get(Localize.Target.START_SCREEN_START_NEW));
         startNew.setOnAction(event -> showPuzzleChooserDialog());
 
+        Button settings = new Button();
+        settings.textProperty().bind(Localize.get(Localize.Target.START_SCREEN_SETTINGS));
+        settings.setOnAction(event -> showOptionDialogBox());
+
         Button quit = new Button();
         quit.textProperty().bind(Localize.get(Localize.Target.START_SCREEN_QUIT));
         quit.setOnAction(event -> Platform.exit());
 
-        buttonBar.getChildren().addAll(continueButton, startNew, quit);
+        buttonBar.getChildren().addAll(continueButton, startNew, settings, quit);
         buttonBar.setAlignment(Pos.CENTER);
 
         buttonBar.setSpacing(10);
@@ -84,6 +92,10 @@ public class StartScreen extends Scene {
         backgroundImagePane.getChildren().add(buttonBar);
 
         Utilities.attach(backgroundImagePane, mainWindow.getPrimaryStage().widthProperty(), mainWindow.getPrimaryStage().heightProperty());
+    }
+
+    private void showOptionDialogBox() {
+        settingsDialog.showMe();
     }
 
     /**

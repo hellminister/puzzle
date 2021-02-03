@@ -28,6 +28,27 @@ public abstract class LineDrawer {
         return stripM(result);
     }
 
+    protected final SVGPoint markPoint(double xy, double yx, Direction dir){
+        return switch (dir){
+            case VERTICAL -> new SVGPoint(xy, yx);
+            case HORIZONTAL -> new SVGPoint(yx, xy);
+        };
+    }
+
+    protected final double parallelSize(Size size, Direction dir){
+        return (switch (dir){
+            case VERTICAL -> size.y();
+            case HORIZONTAL -> size.x();
+        });
+    }
+
+    protected final double perpendicularSize(Size size, Direction dir){
+        return (switch (dir){
+            case VERTICAL -> size.x();
+            case HORIZONTAL -> size.y();
+        });
+    }
+
     private String stripM(String path){
         return path.replaceAll("^(M|m)( |[0-9]|\\.)*", "");
     }

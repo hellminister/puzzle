@@ -13,24 +13,13 @@ public class VLineDrawer extends LineDrawer{
         super(size, direction);
         commands.add(new Command(Operators.M, new SVGPoint(0,0)));
 
+        double range = perpendicularSize(size, direction) * 0.2;
+        double vPoint = rand.nextDouble() * (range * 2) - range;
+        double position = 0.1 + rand.nextDouble() * 0.8;
 
-        switch (direction){
-            case VERTICAL -> {
-                double range = size.x() / 5;
-                double x = rand.nextDouble() * (range * 2) - range;
-                double position = 0.1 + rand.nextDouble() * 0.8;
-
-                commands.add(new Command(Operators.L, new SVGPoint(x, size.y() * position)));
-                commands.add(new Command(Operators.L, new SVGPoint(0, size.y())));
-            }
-            case HORIZONTAL -> {
-                double range = size.y() / 5;
-                double y = rand.nextDouble() * (range * 2) - range;
-                double position = 0.1 + rand.nextDouble() * 0.8;
-
-                commands.add(new Command(Operators.L, new SVGPoint(size.x() * position, y)));
-                commands.add(new Command(Operators.L, new SVGPoint(size.x(), 0)));
-            }
-        }
+        commands.add(new Command(Operators.L, markPoint(vPoint, parallelSize(size, direction) * position, direction)));
+        commands.add(new Command(Operators.L, markPoint(0, parallelSize(size, direction), direction)));
     }
+
+
 }

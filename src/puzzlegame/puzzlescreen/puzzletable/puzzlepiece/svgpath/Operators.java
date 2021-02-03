@@ -1,5 +1,8 @@
 package puzzlegame.puzzlescreen.puzzletable.puzzlepiece.svgpath;
 
+import java.util.Arrays;
+import java.util.Set;
+
 @SuppressWarnings("unused")
 enum Operators {
     M(1, points -> "M " + points[0].x() + " " + points[0].y()),
@@ -16,8 +19,8 @@ enum Operators {
     s(2, points -> "s " + points[0].x() + " " + points[0].y() + " " + points[1].x() + " " + points[1].y()),
     Q(2, points -> "Q " + points[0].x() + " " + points[0].y() + " " + points[1].x() + " " + points[1].y()),
     q(2, points -> "q " + points[0].x() + " " + points[0].y() + " " + points[1].x() + " " + points[1].y()),
-    T(2, points -> "T " + points[0].x() + " " + points[0].y() + " " + points[1].x() + " " + points[1].y()),
-    t(2, points -> "t " + points[0].x() + " " + points[0].y() + " " + points[1].x() + " " + points[1].y()),
+    T(1, points -> "T " + points[0].x() + " " + points[0].y()),
+    t(1, points -> "t " + points[0].x() + " " + points[0].y()),
     Z(0, points -> "Z"),
     z(0, points -> "z"),
     ;
@@ -36,6 +39,12 @@ enum Operators {
 
     public int getNbPoints(){
         return nbPoints;
+    }
+
+    private static final Set<String> availableOperators = Set.of(Arrays.stream(Operators.values()).map(Enum::name).toArray(String[]::new));
+
+    public static boolean isOperator(String operator){
+        return availableOperators.contains(operator);
     }
 
     private interface Transform {

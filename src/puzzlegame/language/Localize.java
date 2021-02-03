@@ -29,7 +29,12 @@ public final class Localize {
         localize.loadLanguage(language);
     }
 
+    public static String getCurrentLanguage(){
+        return localize.getLanguage();
+    }
+
     private final Map<Target, StringProperty> localizedStrings;
+    private String language;
 
     private Localize() {
         EnumMap<Target, StringProperty> temp = new EnumMap<>(Target.class);
@@ -44,9 +49,8 @@ public final class Localize {
         return  localizedStrings.get(target);
     }
 
-
-
     private void loadLanguage(String language){
+        this.language = language;
         EnumSet<Target> notLoaded = EnumSet.allOf(Target.class);
         try (BufferedReader br = Files.newBufferedReader(Paths.get("src/resources/language/" + language + ".txt"))) {
             String line = br.readLine();
@@ -72,10 +76,15 @@ public final class Localize {
         }
     }
 
+    private String getLanguage(){
+        return language;
+    }
+
     public enum Target{
         GAME_TITLE,
         START_SCREEN_CONTINUE,
         START_SCREEN_START_NEW,
+        START_SCREEN_SETTINGS,
         START_SCREEN_QUIT,
         PUZZLE_SCENE_ZOOM,
         PUZZLE_SCENE_SHOW_IMAGE,
@@ -85,6 +94,10 @@ public final class Localize {
         PUZZLE_CHOOSER_SCENE_NB_PIECE_TEXT,
         PUZZLE_CHOOSER_SCENE_START,
         PUZZLE_CHOOSER_SCENE_CANCEL,
+        SETTINGS_SCENE_LANGUAGE,
+        SETTINGS_SCENE_ACCEPT_BUTTON,
+        SETTINGS_SCENE_CANCEL_BUTTON,
+        SETTINGS_SCENE_APPLY_BUTTON,
         PUZZLE_SCENE_SHOW_MINIMAP
 
     }
