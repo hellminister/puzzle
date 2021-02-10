@@ -43,7 +43,7 @@ public class StartScreen extends Scene {
 
         Image image = null;
         // Background image
-        try (InputStream is = Files.newInputStream(Paths.get("src/resources/faces-550786_1920.jpg"))) {
+        try (InputStream is = Files.newInputStream(Paths.get("resources/faces-550786_1920.jpg"))) {
             image = new Image(is);
         } catch (IOException e) {
             e.printStackTrace();

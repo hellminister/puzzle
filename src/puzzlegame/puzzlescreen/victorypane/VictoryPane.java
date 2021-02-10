@@ -25,7 +25,7 @@ public class VictoryPane extends StackPane {
         super();
         Image image = null;
         // victory image
-        try (InputStream is = Files.newInputStream(Paths.get("src/resources/teamwork-3275565_1920.jpg"))) {
+        try (InputStream is = Files.newInputStream(Paths.get("resources/teamwork-3275565_1920.jpg"))) {
             image = new Image(is);
         } catch (IOException e) {
             e.printStackTrace();

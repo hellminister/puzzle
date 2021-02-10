@@ -25,7 +25,7 @@ import static java.util.logging.Logger.getLogger;
 
 public class SettingsScene extends Scene {
 
-    private static final  Path LANGUAGE_DIRECTORY = Paths.get("src/resources/language");
+    private static final  Path LANGUAGE_DIRECTORY = Paths.get("resources/language");
     private static final Logger LOG = getLogger(SettingsScene.class.getName());
 
     private final ChoiceBox<String> languageChoices;

@@ -52,7 +52,7 @@ public final class Localize {
     private void loadLanguage(String language){
         this.language = language;
         EnumSet<Target> notLoaded = EnumSet.allOf(Target.class);
-        try (BufferedReader br = Files.newBufferedReader(Paths.get("src/resources/language/" + language + ".txt"))) {
+        try (BufferedReader br = Files.newBufferedReader(Paths.get("resources/language/" + language + ".txt"))) {
             String line = br.readLine();
 
             while(line != null){
