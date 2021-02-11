@@ -13,10 +13,24 @@ import puzzlegame.util.Utilities;
 
 import java.util.Random;
 
+/**
+ * The main game pane
+ */
 public class PuzzleTable extends AnchorPane {
 
+    /**
+     * the table where the puzzle pieces are
+     */
     private final StackPane table;
+
+    /**
+     * the viewport on the table
+     */
     private final ScrollPane pane;
+
+    /**
+     * the current puzzle
+     */
     private Puzzle puzzle;
 
     public PuzzleTable(){
@@ -25,7 +39,6 @@ public class PuzzleTable extends AnchorPane {
         table.setAlignment(Pos.CENTER);
 
         table.setStyle("-fx-background-color: black");
-
 
         pane = new ScrollPane();
         pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
@@ -58,52 +71,80 @@ public class PuzzleTable extends AnchorPane {
         });
 
         Utilities.attach(pane, widthProperty(), heightProperty());
-
-
     }
 
+    /**
+     * Sets the viewport position on the table
+     * @param vValue the viewport vertical position from 0 to 1
+     * @param hValue the viewport horizontal position from 0 to 1
+     */
     public void setTablePosition(double vValue, double hValue){
         pane.setHvalue(hValue);
         pane.setVvalue(vValue);
     }
 
+    /**
+     * @return the puzzle table
+     */
     public StackPane getTable() {
         return table;
     }
 
+    /**
+     * @return the viewport on the table
+     */
     public ScrollPane getPane() {
         return pane;
     }
 
+    /**
+     * @return the current puzzle
+     */
     public Puzzle getPuzzle(){
         return puzzle;
     }
 
+    /**
+     * zooms out (see more of the table)
+     */
     public void zoomOut() {
         table.setScaleX(table.getScaleX()-0.01);
         table.setScaleY(table.getScaleY()-0.01);
     }
 
+    /**
+     * zooms in (see less of the table)
+     */
     public void zoomIn() {
         table.setScaleX(table.getScaleX()+0.01);
         table.setScaleY(table.getScaleY()+0.01);
     }
 
+    /**
+     * Creates and sets the new puzzle to do
+     * @param chosenImage The image for the puzzle
+     * @param nbPieces    The number of pieces the puzzle should have
+     */
     public void setNewPuzzle(Image chosenImage, int nbPieces) {
         table.getChildren().clear();
         puzzle = new Puzzle(chosenImage, nbPieces, this);
 
+        // the table is at least 4 times the size of the image
         table.setMinHeight(chosenImage.getHeight() * 4);
         table.setMinWidth(chosenImage.getWidth() * 4);
 
+        // disperse the pieces across the table
         Random rand = new Random();
+        int dispersionX = (int) chosenImage.getWidth()*2;
+        int dispersionY = (int) chosenImage.getHeight()*2;
         for (PuzzlePiece pf : puzzle.getPieces()){
-            pf.setTranslateX(rand.nextInt(1200)-600);
+            pf.setTranslateX(rand.nextInt(dispersionX) - dispersionX/2);
+            pf.setTranslateY(rand.nextInt(dispersionY) - dispersionY/2);
 
-            pf.setTranslateY(rand.nextInt(1200)-600);
             table.getChildren().add(pf);
         }
 
+        // makes sure the size of the table is at least the size of the viewport
         if (table.getMinWidth() < pane.getWidth()){
             table.setMinWidth(pane.getWidth());
         }
@@ -112,11 +153,15 @@ public class PuzzleTable extends AnchorPane {
             table.setMinHeight(pane.getHeight());
         }
 
+        // places the viewport at the center of the table
         pane.layout();
-
         setTablePosition(0.5, 0.5);
     }
 
+    /**
+     * resizes the table so a pieces that moves is always on the table
+     * @param position the position of the piece on the table
+     */
     public void resizeTable(Bounds position){
 
         if (position.getMinX() < 0){
@@ -138,6 +183,9 @@ public class PuzzleTable extends AnchorPane {
         }
     }
 
+    /**
+     * @return the zoom value as a property
+     */
     public DoubleProperty getZoom() {
         return table.scaleXProperty();
     }

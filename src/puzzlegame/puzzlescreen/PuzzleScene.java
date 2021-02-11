@@ -23,14 +23,34 @@ import puzzlegame.puzzlescreen.puzzletable.PuzzleTable;
 import puzzlegame.puzzlescreen.victorypane.VictoryPane;
 import puzzlegame.util.Utilities;
 
+/**
+ * The main scene of the game where you actually do the puzzle
+ */
 public class PuzzleScene extends Scene {
 
+    /**
+     * The main game window
+     */
     private final PuzzleMain puzzleGame;
 
+    /**
+     * The finish state of the current puzzle
+     */
     private final BooleanProperty puzzleFinished;
 
+    /**
+     * The pane where the puzzle pieces are
+     */
     private final PuzzleTable puzzleTable;
+
+    /**
+     * The image of the puzzle as a clue
+     */
     private final ImageView imageHint;
+
+    /**
+     * Shows the whole table with the position of the puzzle pieces
+     */
     private final MiniMap miniMap;
 
     /**
@@ -130,14 +150,25 @@ public class PuzzleScene extends Scene {
 
     }
 
+    /**
+     * @return the main window of the game
+     */
     public PuzzleMain getPuzzleGame() {
         return puzzleGame;
     }
 
+    /**
+     * @return whether the puzzle is finished or not as a property
+     */
     public ReadOnlyBooleanProperty puzzleFinishedProperty() {
         return puzzleFinished;
     }
 
+    /**
+     * Prepares and gives the puzzles
+     * @param chosenImage the image to make as a puzzle
+     * @param nbPieces    the number of pieces the puzzle will have
+     */
     public void setNewPuzzle(Image chosenImage, int nbPieces) {
         puzzleTable.setNewPuzzle(chosenImage, nbPieces);
 
@@ -146,6 +177,9 @@ public class PuzzleScene extends Scene {
         miniMap.populate(puzzleTable.getPuzzle().getPieces());
     }
 
+    /**
+     * @return the main pane containing the puzzle pieces
+     */
     public PuzzleTable getPuzzleTable(){
         return puzzleTable;
     }

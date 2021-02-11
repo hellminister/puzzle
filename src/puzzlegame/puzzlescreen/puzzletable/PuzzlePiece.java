@@ -15,23 +15,67 @@ import javafx.scene.shape.SVGPath;
 
 import java.util.Optional;
 
+/**
+ * A puzzle piece
+ */
 public class PuzzlePiece extends StackPane {
 
+    /**
+     * the position of the piece in the puzzle
+     */
     private final Position position;
+
+    /**
+     * The size of the piece
+     */
     private final Size size;
+
+    /**
+     * whether the piece is fully transparent (ie non existing)
+     */
     private final boolean invisible;
+
+    /**
+     * The group of attached pieces this piece is part of
+     */
     private PuzzleFragment inFragment;
+
+    /**
+     * The shape of the piece
+     */
     private final SVGPath pieceShape;
+
+    /**
+     * The X position correction of the clip (piece shape)
+     * also the part where the shape can exceed to in size
+     */
     private final DoubleProperty clipXCorrection;
+
+    /**
+     * The Y position correction of the clip (piece shape)
+     * also the part where the shape can exceed to in size
+     */
     private final DoubleProperty clipYCorrection;
 
+    /**
+     * last recorded x mouse position (for drag)
+     */
     private double lastMouseX;
+
+    /**
+     * last recorded y mouse position (for drag)
+     */
     private double lastMouseY;
 
     /**
-     * Allocates a new ImageView object using the given image.
+     * Creates the puzzle piece
      *
-     * @param image Image that this ImageView uses
+     * for now a fifth of the piece size is used for the irregular shape
+     *
+     * @param image Image of the puzzle
+     * @param position the position of the piece inside the puzzle
+     * @param size The size of the piece
+     * @param shape The shape of the piece
      */
     public PuzzlePiece(Image image, Size size, Position position, SVGPath shape) {
         super();
@@ -47,7 +91,6 @@ public class PuzzlePiece extends StackPane {
                 size.y() + (clipYCorrection.get())*2);
         iv.setViewport(viewport);
 
-        shape.setFill(Color.BLUE);
         shape.setStroke(Color.GREENYELLOW);
 
         shape.translateXProperty().bind(clipXCorrection);
@@ -56,12 +99,12 @@ public class PuzzlePiece extends StackPane {
         iv.setClip(shape);
 
         getChildren().addAll(iv);
-      //  shape.toFront();
 
         setMinSize(size.x() + (size.x()/5)*2, size.y() + (size.y()/5)*2);
         setPrefSize(size.x() + (size.x()/5)*2, size.y() + (size.y()/5)*2);
         setMaxSize(size.x() + (size.x()/5)*2, size.y() + (size.y()/5)*2);
 
+        // checks if the piece is invisible (completely transparent)
         PixelReader pr = image.getPixelReader();
         boolean inv = true;
         for (int i = (int) viewport.getMinX(); i < viewport.getMaxX(); i++){
@@ -82,10 +125,13 @@ public class PuzzlePiece extends StackPane {
 
     }
 
+    /**
+     * Sets the supported actions on the piece
+     */
     private void setActions() {
+        // when primary mouse button is pressed, brings all the pieces from the containing fragment to the front
         setOnMousePressed(event -> {
             if (event.getButton() == MouseButton.PRIMARY) {
-
                 for (PuzzlePiece piece : inFragment.getPieces()) {
                     piece.toFront();
                 }
@@ -94,12 +140,14 @@ public class PuzzlePiece extends StackPane {
             }
         });
 
+        // when primary mouse button is released, connects the fragment if possible with another fragment
         setOnMouseReleased(event -> {
             if (event.getButton() == MouseButton.PRIMARY) {
                 inFragment.checkConnections();
             }
         });
 
+        // when secondary mouse button is clicked, pushed all the pieces from the containing fragment to the back
         setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.SECONDARY){
                 for (PuzzlePiece piece : inFragment.getPieces()) {
@@ -108,6 +156,7 @@ public class PuzzlePiece extends StackPane {
             }
         });
 
+        // moves all the pieces from the containing fragment as the mouse drags
         setOnMouseDragged(event -> {
             if (event.getButton() == MouseButton.PRIMARY) {
                 // delta / getParent().getScale() -> so the mouse stays with the group in all zooms
@@ -125,21 +174,33 @@ public class PuzzlePiece extends StackPane {
         });
     }
 
+    /**
+     * move the piece by the deltas
+     * @param deltaX The X translation
+     * @param deltaY The Y translation
+     */
     public void moveDragged(double deltaX, double deltaY){
         double initialTranslateX = getTranslateX();
         double initialTranslateY = getTranslateY();
 
-        // delta / getParent().getScale() -> so the mouse stays with the group in all zooms
         setTranslateX(initialTranslateX + deltaX);
         setTranslateY(initialTranslateY + deltaY);
 
         inFragment.getPuzzle().getTable().resizeTable(getBoundsInParent());
     }
 
+    /**
+     * @return whether this piece is fully transparent
+     */
     public boolean isInvisible() {
         return invisible;
     }
 
+    /**
+     * calculates the distance between this piece and the given one if they are both adjacent
+     * @param piece2 the second piece
+     * @return the distance between the pieces if adjacent
+     */
     public Optional<Delta> distance(PuzzlePiece piece2) {
         Optional<Delta> distance = Optional.empty();
 
@@ -165,24 +226,39 @@ public class PuzzlePiece extends StackPane {
         return distance;
     }
 
+    /**
+     * @param puzzleFragment the new owning fragment
+     */
     public void setOwningFragment(PuzzleFragment puzzleFragment) {
         inFragment = puzzleFragment;
     }
 
-
+    /**
+     * adjusts the piece's position
+     * @param delta The values by which to adust the piece's position
+     */
     public void adjust(Delta delta) {
         setTranslateX(getTranslateX() + delta.x());
         setTranslateY(getTranslateY() + delta.y());
     }
 
+    /**
+     * @return the shape of the piece
+     */
     public SVGPath getPieceShape() {
         return pieceShape;
     }
 
+    /**
+     * @return The piece adjustment for its shape width wise
+     */
     public ReadOnlyDoubleProperty clipXCorrectionProperty() {
         return clipXCorrection;
     }
 
+    /**
+     * @return The piece adjustment for its shape height wise
+     */
     public ReadOnlyDoubleProperty clipYCorrectionProperty() {
         return clipYCorrection;
     }

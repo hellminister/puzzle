@@ -23,11 +23,17 @@ import java.util.stream.Stream;
 
 import static java.util.logging.Logger.getLogger;
 
+/**
+ * The scene containing the Settings Dialog elements
+ */
 public class SettingsScene extends Scene {
 
     private static final  Path LANGUAGE_DIRECTORY = Paths.get("resources/language");
     private static final Logger LOG = getLogger(SettingsScene.class.getName());
 
+    /**
+     * The list of available language
+     */
     private final ChoiceBox<String> languageChoices;
 
 
@@ -71,11 +77,17 @@ public class SettingsScene extends Scene {
 
     }
 
+    /**
+     * Applies the modifications chosen
+     */
     private void apply() {
         String language = languageChoices.getValue();
         Localize.load(language);
     }
 
+    /**
+     * Extracts the list of available languages
+     */
     private void loadLanguageChoices(){
         List<String> languages = new LinkedList<>();
         try (Stream<Path> walk = Files.walk(LANGUAGE_DIRECTORY, 1)){
@@ -90,6 +102,9 @@ public class SettingsScene extends Scene {
         languageChoices.setItems(FXCollections.observableList(languages));
     }
 
+    /**
+     * updates the shown current values of the settings with the actual game values
+     */
     public void update(){
         languageChoices.setValue(Localize.getCurrentLanguage());
     }

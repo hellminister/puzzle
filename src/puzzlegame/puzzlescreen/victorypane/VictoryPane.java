@@ -16,11 +16,12 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * The pane for when the puzzle is finished
+ */
 public class VictoryPane extends StackPane {
-    /**
-     * Creates a Scene for a specific root Node.
-     *
-     */
+
+
     public VictoryPane(PuzzleScene window) {
         super();
         Image image = null;
