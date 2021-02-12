@@ -143,9 +143,10 @@ public class PuzzlePiece extends StackPane {
         // when primary mouse button is released, connects the fragment if possible with another fragment
         setOnMouseReleased(event -> {
             if (event.getButton() == MouseButton.PRIMARY) {
-                // TODO finish this to check for multiple possible connections
                 boolean connected = true;
-                connected = inFragment.checkConnections();
+                while (connected) {
+                    connected = inFragment.checkConnections();
+                }
             }
         });
 
