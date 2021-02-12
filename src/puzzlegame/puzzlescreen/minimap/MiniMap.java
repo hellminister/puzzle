@@ -14,10 +14,19 @@ import puzzlegame.util.Utilities;
 
 import java.util.List;
 
+/**
+ * A minimap to show the position of all the puzzle pieces on the table
+ */
 public class MiniMap extends StackPane {
 
+    /**
+     * the ratio between the table and the minimap space
+     */
     private final RatioBinding ratio;
 
+    /**
+     * A rectangle representing the viewport on the table
+     */
     private final Rectangle viewport;
 
 
@@ -55,6 +64,12 @@ public class MiniMap extends StackPane {
 
     }
 
+    /**
+     * Creates a rectangle representing the viewport on the table
+     * (works more or less)
+     * @param table the puzzle table
+     * @return a rectangle representing the viewport on the table
+     */
     private Rectangle makeViewport(PuzzleTable table) {
         final Rectangle viewport;
         viewport = new Rectangle();
@@ -71,6 +86,10 @@ public class MiniMap extends StackPane {
         return viewport;
     }
 
+    /**
+     * Fills the minimap
+     * @param pieces the pieces to add to the minimap
+     */
     public void populate(List<PuzzlePiece> pieces){
         getChildren().clear();
 

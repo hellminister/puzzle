@@ -1,6 +1,8 @@
 package puzzlegame.language;
 
-import javafx.beans.property.*;
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,21 +21,42 @@ import java.util.logging.Logger;
 public final class Localize {
     private static final Logger LOG = Logger.getLogger(Localize.class.getName());
 
+    /**
+     * The singleton object
+     */
     private static final Localize localize = new Localize();
 
+    /**
+     * @param target the string to obtain
+     * @return the asked string
+     */
     public static ReadOnlyStringProperty get(Target target){
         return localize.getString(target);
     }
 
+    /**
+     * Loads the asked language
+     * @param language the language to load
+     */
     public static void load(String language){
         localize.loadLanguage(language);
     }
 
+    /**
+     * @return the currently loaded language
+     */
     public static String getCurrentLanguage(){
         return localize.getLanguage();
     }
 
+    /**
+     * The list of localized String
+     */
     private final Map<Target, StringProperty> localizedStrings;
+
+    /**
+     * The currently loaded language
+     */
     private String language;
 
     private Localize() {
@@ -45,10 +68,18 @@ public final class Localize {
         localizedStrings = Collections.unmodifiableMap(temp);
     }
 
+    /**
+     * @param target the wanted String name
+     * @return the wanted String
+     */
     private ReadOnlyStringProperty getString(Target target){
         return  localizedStrings.get(target);
     }
 
+    /**
+     * Loads the asked language
+     * @param language the language to load
+     */
     private void loadLanguage(String language){
         this.language = language;
         EnumSet<Target> notLoaded = EnumSet.allOf(Target.class);
@@ -76,10 +107,17 @@ public final class Localize {
         }
     }
 
+    /**
+     * @return the currently loaded language
+     */
     private String getLanguage(){
         return language;
     }
 
+    /**
+     * The list of available localized string
+     * each value represents a String to localize
+     */
     public enum Target{
         GAME_TITLE,
         START_SCREEN_CONTINUE,
@@ -99,6 +137,5 @@ public final class Localize {
         SETTINGS_SCENE_CANCEL_BUTTON,
         SETTINGS_SCENE_APPLY_BUTTON,
         PUZZLE_SCENE_SHOW_MINIMAP
-
     }
 }

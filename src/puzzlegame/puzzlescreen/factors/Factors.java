@@ -2,9 +2,19 @@ package puzzlegame.puzzlescreen.factors;
 
 import java.util.*;
 
+/**
+ * Contains all the factor pairs for a given number
+ */
 public class Factors {
 
+    /**
+     * the factored number
+     */
     private final int product;
+
+    /**
+     * the list of paired factors
+     */
     private final List<Factor> factors;
 
     public Factors(int value){
@@ -12,6 +22,11 @@ public class Factors {
         factors = List.copyOf(generateFactors(value));
     }
 
+    /**
+     * Finds all the factors pair for the given number
+     * @param value the number to factor
+     * @return the list of factors
+     */
     private SortedSet<Factor> generateFactors(int value) {
         SortedSet<Factor> facts = new TreeSet<>();
 
@@ -25,18 +40,28 @@ public class Factors {
                 }
             }
         }
-
         return facts;
     }
 
+    /**
+     * @return the list of paired factors
+     */
     public List<Factor> getFactors() {
         return factors;
     }
 
+    /**
+     * @return The factored number for this object
+     */
     public int getForProduct(){
         return product;
     }
 
+    /**
+     * Finds the paired factors that produces a ratio nearest to the given ration
+     * @param ratio the wanted ratio
+     * @return Factor pair giving the nearest ratio
+     */
     public Factor nearestRatioTo(double ratio){
 
         double previousDeltaRatio = Double.MAX_VALUE;

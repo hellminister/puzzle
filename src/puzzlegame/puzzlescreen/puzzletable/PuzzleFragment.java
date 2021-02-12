@@ -44,8 +44,8 @@ public class PuzzleFragment {
 
     /**
      * Returns a delta if the fragments can be connected together and that they are close enough
-     * @param puzzleFragment
-     * @return
+     * @param puzzleFragment the fragment to check
+     * @return the distance between the fragments if connectable
      */
     public Optional<Delta> connectsWith(PuzzleFragment puzzleFragment) {
         for (PuzzlePiece piece1 : pieces){
@@ -77,9 +77,10 @@ public class PuzzleFragment {
 
     /**
      * Checks possible connection between this fragment and the others
+     * @return a connection was made
      */
-    public void checkConnections() {
-        fromPuzzle.checkConnections(this);
+    public boolean checkConnections() {
+        return fromPuzzle.checkConnections(this);
     }
 
     /**

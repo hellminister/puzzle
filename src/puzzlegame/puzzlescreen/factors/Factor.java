@@ -1,10 +1,23 @@
 package puzzlegame.puzzlescreen.factors;
 
+/**
+ * A pair of factors
+ */
 public final class Factor implements Comparable<Factor>{
-    
-    
+
+    /**
+     * The ratio of the factors
+     */
     private final double ratio;
+
+    /**
+     * the first factor
+     */
     private final int x;
+
+    /**
+     * the second factor
+     */
     private final int y;
 
     public Factor(int x, int y) {
@@ -13,14 +26,23 @@ public final class Factor implements Comparable<Factor>{
         this.ratio = (double)this.x / this.y;
     }
 
+    /**
+     * @return the first factor
+     */
     public int getX(){
         return x;
     }
 
+    /**
+     * @return the second factor
+     */
     public int getY(){
         return y;
     }
 
+    /**
+     * @return the ratio between the factors
+     */
     public double getRatio() {
         return ratio;
     }

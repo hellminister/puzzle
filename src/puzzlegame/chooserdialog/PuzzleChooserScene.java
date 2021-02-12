@@ -20,10 +20,19 @@ import puzzlegame.language.Localize;
 
 import java.io.*;
 
+/**
+ * The scene of the Puzzle Chooser dialog window
+ */
 public class PuzzleChooserScene extends Scene {
 
-
+    /**
+     * the chosen image
+     */
     private Image chosenImage = null;
+
+    /**
+     * the number of pieces
+     */
     private final IntegerProperty nbPieces;
 
 
@@ -43,6 +52,8 @@ public class PuzzleChooserScene extends Scene {
         var leftSide = new VBox();
         upperBox.getChildren().addAll(leftSide, rightSide);
         upperBox.setAlignment(Pos.CENTER);
+
+        // Start of choose image
 
         ImageView preview = new ImageView();
         preview.setPreserveRatio(true);
@@ -85,6 +96,10 @@ public class PuzzleChooserScene extends Scene {
         leftSide.getChildren().addAll(previewPane);
         leftSide.setAlignment(Pos.CENTER);
 
+        // end of choose image
+
+        // start of choose number of pieces
+
         TextField nbPieceGetter = new TextField();
         nbPieceGetter.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), 4, change -> {
             String newText = change.getControlNewText();
@@ -105,6 +120,7 @@ public class PuzzleChooserScene extends Scene {
         rightSide.getChildren().addAll(imageChooser, chooseNbPieceText, nbPieceGetter);
         rightSide.setAlignment(Pos.CENTER);
 
+        // end of choose number of pieces
 
 
         Button start = new Button();

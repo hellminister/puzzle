@@ -4,6 +4,10 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.layout.StackPane;
 
+/**
+ * A binding calculating a ratio between 2 heights and 2 width
+ * returns the biggest ratio of the two
+ */
 public class RatioBinding extends DoubleBinding {
 
     private final DoubleBinding heightRatio;

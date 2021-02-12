@@ -7,14 +7,13 @@ import javafx.scene.shape.SVGPath;
 import puzzlegame.puzzlescreen.puzzletable.PuzzlePiece;
 import puzzlegame.puzzlescreen.puzzletable.puzzlepiece.svgpath.SVGPathUtilities;
 
+/**
+ * Represents a puzzle piece, just smaller to place in the minimap
+ */
 public class MinimapPuzzlePiece extends Group {
-
 
     public MinimapPuzzlePiece(PuzzlePiece piece, RatioBinding ratio){
         super();
-
-
-
         ImageView original = (ImageView) piece.getChildren().get(0);
 
         ImageView me = new ImageView(original.getImage());
