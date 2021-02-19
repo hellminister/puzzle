@@ -1,19 +1,24 @@
 package puzzlegame;
 
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import puzzlegame.language.Localize;
 import puzzlegame.puzzlescreen.PuzzleScene;
 import puzzlegame.startscreen.StartScreen;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 /**
  * The main class of the puzzle game
  * Controls the Main window and the change of scenes
  */
 public class PuzzleMain extends Application {
+    private static final Path AUTOSAVE_PATH = Path.of("resources/save/autosave.puz");
 
 
     /** The Scene where we actually do the puzzle*/
@@ -25,6 +30,9 @@ public class PuzzleMain extends Application {
     /** The main window of the game*/
     private Stage primaryStage;
 
+    /** A property indicating if theres an existing auto save*/
+    private BooleanProperty autosaveExist;
+
     /**
      * Initialize and shows the main window of the game
      * @param primaryStage The Main window of the game
@@ -33,17 +41,27 @@ public class PuzzleMain extends Application {
     public void start(Stage primaryStage){
         this.primaryStage = primaryStage;
         Localize.load("francais");
-     //   primaryStage.setTitle("Puzzler");
         primaryStage.titleProperty().bind(Localize.get(Localize.Target.GAME_TITLE));
+
+        autosaveExist = new SimpleBooleanProperty(Files.exists(AUTOSAVE_PATH));
 
         puzzleScene = new PuzzleScene(this);
         startScreen = new StartScreen(this);
+
 
         primaryStage.setScene(startScreen);
         primaryStage.sizeToScene();
         primaryStage.setMaximized(true);
         primaryStage.show();
 
+    }
+
+    /**
+     * autosaves the current puzzle when quitting the game
+     */
+    @Override
+    public void stop(){
+        puzzleScene.savePuzzle(AUTOSAVE_PATH);
     }
 
     /**
@@ -73,9 +91,10 @@ public class PuzzleMain extends Application {
      * Permits transfer of informations to the puzzle scene
      * @param chosenImage The puzzle image that was chosen
      * @param nbPieces    The number of pieces that the puzzle will have
+     * @param imageFileName The file path of the image
      */
-    public void sendInfoToPuzzleTable(Image chosenImage, int nbPieces) {
-        puzzleScene.setNewPuzzle(chosenImage, nbPieces);
+    public void sendInfoToPuzzleTable(Image chosenImage, int nbPieces, String imageFileName) {
+        puzzleScene.setNewPuzzle(chosenImage, nbPieces, imageFileName);
     }
 
     /**
@@ -103,5 +122,23 @@ public class PuzzleMain extends Application {
      */
     public void showPuzzleChooserDialog() {
         startScreen.showPuzzleChooserDialog();
+    }
+
+    /**
+     * @return A property indicating if theres an existing auto save
+     */
+    public ReadOnlyBooleanProperty autosaveExistProperty() {
+        return autosaveExist;
+    }
+
+    /**
+     * Loads the auto saved puzzle and switch to the puzzle table
+     * also deletes the autosave file
+     */
+    public void loadAutoSaveAndSwitch() {
+        puzzleScene.loadSavedPuzzled(AUTOSAVE_PATH);
+        AUTOSAVE_PATH.toFile().delete();
+        autosaveExist.set(false);
+        switchToPuzzleTable();
     }
 }

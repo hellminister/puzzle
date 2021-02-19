@@ -21,12 +21,32 @@ public class PuzzleFragment {
     private final Puzzle fromPuzzle;
 
 
-    public PuzzleFragment(PuzzlePiece puzzlePiece, Puzzle puzzle) {
-        super();
+    /**
+     * Creates an empty fragment for the given puzzle
+     * @param puzzle the owning puzzle
+     */
+    public PuzzleFragment(Puzzle puzzle){
         pieces = new LinkedList<>();
-        pieces.add(puzzlePiece);
         fromPuzzle = puzzle;
-        puzzlePiece.setOwningFragment(this);
+    }
+
+    /**
+     * Creates a fragment containing the given piece
+     * @param puzzlePiece The piece to contain
+     * @param puzzle The owning puzzle
+     */
+    public PuzzleFragment(PuzzlePiece puzzlePiece, Puzzle puzzle) {
+        this(puzzle);
+        addPuzzlePiece(puzzlePiece);
+    }
+
+    /**
+     * Adds a puzzle piece to this fragment
+     * @param piece the piece to add
+     */
+    public void addPuzzlePiece(PuzzlePiece piece){
+        pieces.add(piece);
+        piece.setOwningFragment(this);
     }
 
     /**
@@ -35,9 +55,8 @@ public class PuzzleFragment {
      * @param delta    the difference of distance between the perfect position and the real position
      */
     public void insertFragment(PuzzleFragment toInsert, Delta delta){
-        pieces.addAll(toInsert.pieces);
         for (PuzzlePiece piece : toInsert.pieces){
-            piece.setOwningFragment(this);
+            addPuzzlePiece(piece);
             piece.adjust(delta);
         }
     }
@@ -88,5 +107,19 @@ public class PuzzleFragment {
      */
     public Puzzle getPuzzle() {
         return fromPuzzle;
+    }
+
+    /**
+     * Creates a string that can be used to recreate this fragment
+     * @return a string describing this fragment
+     */
+    public String save() {
+        StringBuilder save = new StringBuilder("Fragment\n");
+
+        for (PuzzlePiece piece : pieces) {
+            save.append(piece.save()).append("\n");
+        }
+
+        return save.toString();
     }
 }

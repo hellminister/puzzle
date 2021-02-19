@@ -3,6 +3,9 @@ package puzzlegame.util;
 import javafx.beans.binding.DoubleExpression;
 import javafx.scene.layout.Region;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+
 /**
  * Simple utilities class containing some utilities methods
  */
@@ -27,5 +30,21 @@ public final class Utilities {
         pane.maxHeightProperty().bind(height);
         pane.minHeightProperty().bind(height);
         pane.prefHeightProperty().bind(height);
+    }
+
+    /**
+     * To skip blank lines
+     * @param br The buffered Reader
+     * @return the next not blank line, or null
+     * @throws IOException If a problem arises
+     */
+    public static String getNextLine(BufferedReader br) throws IOException {
+        String line = br.readLine();
+
+        while (line != null && line.isBlank()){
+            line = br.readLine();
+        }
+
+        return line;
     }
 }

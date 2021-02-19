@@ -68,8 +68,5 @@ public class VictoryPane extends StackPane {
 
         buttonBar.getChildren().addAll(newPuzzle, backToMain);
         buttonBar.setAlignment(Pos.CENTER);
-
-
-
     }
 }

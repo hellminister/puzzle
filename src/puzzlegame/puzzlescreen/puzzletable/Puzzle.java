@@ -4,12 +4,17 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
+import javafx.scene.shape.SVGPath;
 import puzzlegame.puzzlescreen.puzzletable.puzzlepiece.svgpath.PuzzleMaker;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static puzzlegame.util.Utilities.getNextLine;
 
 /**
  * Represents the puzzle
@@ -39,17 +44,25 @@ public class Puzzle {
     private final BooleanBinding finished;
 
     /**
+     * The file path to the chosen image
+     */
+    private final String imageURL;
+
+    /**
      * Creates the puzzle from the given image
      * @param image The image of the puzzle
      * @param numberOfPieces The number of pieces of the puzzle
-     * @param puzzleScene The table it will be on
+     * @param imageFileName The file path of the image
+     * @param puzzleTable The table it will be on
      */
-    public Puzzle(Image image, int numberOfPieces, PuzzleTable puzzleScene){
+    public Puzzle(Image image, int numberOfPieces, String imageFileName, PuzzleTable puzzleTable){
         fragments = FXCollections.observableArrayList();
         var piecesTemp = new ArrayList<PuzzlePiece>();
-        onTable = puzzleScene;
+        onTable = puzzleTable;
 
         finished = new FinishedPuzzle(fragments);
+
+        imageURL = imageFileName;
 
         var cutPieces = PuzzleMaker.makePuzzle(image, numberOfPieces);
 
@@ -60,7 +73,74 @@ public class Puzzle {
                 }
         }
         pieces = Collections.unmodifiableList(piecesTemp);
+    }
 
+    /**
+     * Constructor used when loading a puzzle from a file
+     * @param image the puzzle image
+     * @param imagePath the puzzle image file path
+     * @param br The file reader
+     * @param puzzleTable the puzzle table where the puzzle will be
+     * @throws IOException if a problem occurs with the file
+     * @throws IllegalStateException if there is a malformed problem in the file
+     */
+    public Puzzle(Image image, String imagePath, BufferedReader br, PuzzleTable puzzleTable) throws IOException, IllegalStateException {
+        fragments = FXCollections.observableArrayList();
+        var piecesTemp = new ArrayList<PuzzlePiece>();
+        onTable = puzzleTable;
+        finished = new FinishedPuzzle(fragments);
+
+        imageURL = imagePath;
+
+        String line = getNextLine(br);
+        PuzzleFragment fragment = null;
+        PuzzlePiece piece;
+        while (line != null){
+            switch (line) {
+                case "Fragment" -> {
+                    fragment = new PuzzleFragment(this);
+                    fragments.add(fragment);
+                }
+                case "Piece" -> {
+                    piece = readPiece(image, br);
+                    // if it is null then theres a problem in the loaded file, so throw the exception...
+                    fragment.addPuzzlePiece(piece);
+                    piecesTemp.add(piece);
+
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + line);
+            }
+
+            line = getNextLine(br);
+        }
+
+
+        pieces = Collections.unmodifiableList(piecesTemp);
+    }
+
+    /**
+     * Reads and creates a puzzle piece
+     * @param image the puzzle image
+     * @param br the buffered reader loading the puzzle
+     * @return The recreated puzzle piece
+     * @throws IOException if theres a problem reading the file
+     */
+    private PuzzlePiece readPiece(Image image, BufferedReader br) throws IOException {
+        String line = getNextLine(br).strip();
+        String[] splitted = line.split(" ");
+        Position pos = new Position(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
+
+        line = getNextLine(br).strip();
+        splitted = line.split(" ");
+        Size size = new Size(Double.parseDouble(splitted[0]), Double.parseDouble(splitted[1]));
+
+        line = getNextLine(br).strip();
+        SVGPath svgpath = new SVGPath();
+        svgpath.setContent(line);
+
+        line = getNextLine(br).strip();
+        splitted = line.split(" ");
+        return new PuzzlePiece(image, size, pos, svgpath, Double.parseDouble(splitted[0]), Double.parseDouble(splitted[1]));
     }
 
     /**
@@ -103,6 +183,22 @@ public class Puzzle {
      */
     public BooleanBinding finished() {
         return finished;
+    }
+
+    /**
+     * Generates a string that can be used to recreate the current state of this puzzle
+     * @return the description string of this puzzle
+     */
+    public String save() {
+        StringBuilder save = new StringBuilder();
+
+        save.append(imageURL).append("\n");
+
+        for (PuzzleFragment fragment: fragments) {
+            save.append(fragment.save()).append("\n");
+        }
+
+        return save.toString();
     }
 
     /**

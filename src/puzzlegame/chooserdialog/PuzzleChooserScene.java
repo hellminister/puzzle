@@ -31,6 +31,11 @@ public class PuzzleChooserScene extends Scene {
     private Image chosenImage = null;
 
     /**
+     * the path of the image
+     */
+    private String imageFileName = null;
+
+    /**
      * the number of pieces
      */
     private final IntegerProperty nbPieces;
@@ -86,6 +91,7 @@ public class PuzzleChooserScene extends Scene {
                     Image image = new Image(is);
                     chosenImage = image;
                     preview.setImage(image);
+                    imageFileName = file.getAbsolutePath();
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -127,7 +133,7 @@ public class PuzzleChooserScene extends Scene {
         start.textProperty().bind(Localize.get(Localize.Target.PUZZLE_CHOOSER_SCENE_START));
         start.setOnAction(event -> {
             if (chosenImage != null && nbPieces.get() > 1){
-                pcd.sendInfoToPuzzleTable(chosenImage, nbPieces.get());
+                pcd.sendInfoToPuzzleTable(chosenImage, nbPieces.get(), imageFileName);
                 pcd.mainWindowSwitchToTable();
                 pcd.close();
             }

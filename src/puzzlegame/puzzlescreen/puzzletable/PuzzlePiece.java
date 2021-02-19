@@ -126,6 +126,25 @@ public class PuzzlePiece extends StackPane {
     }
 
     /**
+     * Creates the puzzle piece
+     *
+     * Used to reload an unfinished puzzle
+     *
+     * @param image Image of the puzzle
+     * @param position the position of the piece inside the puzzle
+     * @param size The size of the piece
+     * @param shape The shape of the piece
+     * @param translateX X position on the table
+     * @param translateY Y position on the table
+     */
+    public PuzzlePiece(Image image, Size size, Position position, SVGPath shape, double translateX, double translateY) {
+        this(image, size, position, shape);
+        setTranslateX(translateX);
+        setTranslateY(translateY);
+    }
+
+
+    /**
      * Sets the supported actions on the piece
      */
     private void setActions() {
@@ -264,5 +283,19 @@ public class PuzzlePiece extends StackPane {
      */
     public ReadOnlyDoubleProperty clipYCorrectionProperty() {
         return clipYCorrection;
+    }
+
+    /**
+     * @return a String containing all necessary info to recreate this piece
+     */
+    public String save() {
+        String save = "Piece\n";
+
+        save += position.x() + " " + position.y() + "\n";
+        save += size.x() + " " + size.y() + "\n";
+        save += pieceShape.getContent() + "\n";
+        save += getTranslateX() + " " + getTranslateY() + "\n";
+
+        return save;
     }
 }

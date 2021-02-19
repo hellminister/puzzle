@@ -23,10 +23,17 @@ import puzzlegame.puzzlescreen.puzzletable.PuzzleTable;
 import puzzlegame.puzzlescreen.victorypane.VictoryPane;
 import puzzlegame.util.Utilities;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.logging.Logger;
+
 /**
  * The main scene of the game where you actually do the puzzle
  */
 public class PuzzleScene extends Scene {
+    private static final Logger LOG = Logger.getLogger(PuzzleScene.class.getName());
 
     /**
      * The main game window
@@ -168,12 +175,25 @@ public class PuzzleScene extends Scene {
      * Prepares and gives the puzzles
      * @param chosenImage the image to make as a puzzle
      * @param nbPieces    the number of pieces the puzzle will have
+     * @param imageFileName The file path of the image
      */
-    public void setNewPuzzle(Image chosenImage, int nbPieces) {
-        puzzleTable.setNewPuzzle(chosenImage, nbPieces);
+    public void setNewPuzzle(Image chosenImage, int nbPieces, String imageFileName) {
+        puzzleTable.setNewPuzzle(chosenImage, nbPieces, imageFileName);
 
         puzzleFinished.bind(puzzleTable.getPuzzle().finished());
         imageHint.setImage(chosenImage);
+        miniMap.populate(puzzleTable.getPuzzle().getPieces());
+    }
+
+    /**
+     * Loads the saved puzzle
+     * @param fileName the saved puzzle filename
+     */
+    public void loadSavedPuzzled(Path fileName){
+        Image image = puzzleTable.loadSavedPuzzle(fileName);
+
+        puzzleFinished.bind(puzzleTable.getPuzzle().finished());
+        imageHint.setImage(image);
         miniMap.populate(puzzleTable.getPuzzle().getPieces());
     }
 
@@ -182,5 +202,21 @@ public class PuzzleScene extends Scene {
      */
     public PuzzleTable getPuzzleTable(){
         return puzzleTable;
+    }
+
+    /**
+     * Saves the current puzzle if unfinished to the given file
+     * @param file the file where to save the puzzle
+     */
+    public void savePuzzle(Path file) {
+        if (!puzzleFinished.get()){
+            String save = puzzleTable.save();
+            try (BufferedWriter bw = Files.newBufferedWriter(file)){
+                bw.write(save);
+                bw.flush();
+            } catch (IOException e) {
+                LOG.severe(e::toString);
+            }
+        }
     }
 }

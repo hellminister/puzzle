@@ -1,6 +1,7 @@
 package puzzlegame.startscreen;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -69,8 +70,14 @@ public class StartScreen extends Scene {
         // this button is available only when there's an unfinished puzzle
         Button continueButton = new Button();
         continueButton.textProperty().bind(Localize.get(Localize.Target.START_SCREEN_CONTINUE));
-        continueButton.setOnAction(event -> mainWindow.switchToPuzzleTable());
-        continueButton.disableProperty().bind(mainWindow.finishedPuzzleProperty());
+        continueButton.setOnAction(event -> {
+            if (!mainWindow.finishedPuzzleProperty().get()) {
+                mainWindow.switchToPuzzleTable();
+            } else {
+                mainWindow.loadAutoSaveAndSwitch();
+            }
+        });
+        continueButton.disableProperty().bind(mainWindow.finishedPuzzleProperty().and(Bindings.not(mainWindow.autosaveExistProperty())));
 
         Button startNew = new Button();
         startNew.textProperty().bind(Localize.get(Localize.Target.START_SCREEN_START_NEW));

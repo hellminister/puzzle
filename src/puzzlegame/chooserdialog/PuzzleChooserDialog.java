@@ -28,9 +28,10 @@ public class PuzzleChooserDialog extends Stage {
      * transfers the obtained information to the puzzle table
      * @param chosenImage The image to make as a puzzle
      * @param nbPieces    The number of pieces for the puzzle
+     * @param imageFileName The file path of the image
      */
-    public void sendInfoToPuzzleTable(Image chosenImage, int nbPieces) {
-        puzzleGame.sendInfoToPuzzleTable(chosenImage, nbPieces);
+    public void sendInfoToPuzzleTable(Image chosenImage, int nbPieces, String imageFileName) {
+        puzzleGame.sendInfoToPuzzleTable(chosenImage, nbPieces, imageFileName);
     }
 
     /**

@@ -11,7 +11,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import puzzlegame.util.Utilities;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Random;
+
+import static puzzlegame.util.Utilities.getNextLine;
 
 /**
  * The main game pane
@@ -124,10 +131,11 @@ public class PuzzleTable extends AnchorPane {
      * Creates and sets the new puzzle to do
      * @param chosenImage The image for the puzzle
      * @param nbPieces    The number of pieces the puzzle should have
+     * @param imageFileName The file path of the image
      */
-    public void setNewPuzzle(Image chosenImage, int nbPieces) {
+    public void setNewPuzzle(Image chosenImage, int nbPieces, String imageFileName) {
         table.getChildren().clear();
-        puzzle = new Puzzle(chosenImage, nbPieces, this);
+        puzzle = new Puzzle(chosenImage, nbPieces, imageFileName, this);
 
         // the table is at least 4 times the size of the image
         table.setMinHeight(chosenImage.getHeight() * 4);
@@ -158,6 +166,67 @@ public class PuzzleTable extends AnchorPane {
         setTablePosition(0.5, 0.5);
     }
 
+
+    /**
+     * Loads and sets the given puzzle saved file
+     * @param filename the puzzle saved file path
+     * @return The image of the loaded puzzle
+     */
+    public Image loadSavedPuzzle(Path filename){
+        table.getChildren().clear();
+        Image image = null;
+        try (BufferedReader br = Files.newBufferedReader(filename)){
+
+            reloadTable(br);
+            String imagePath = getNextLine(br);
+            Path path = Paths.get(imagePath);
+            image = new Image(path.toUri().toURL().toExternalForm());
+
+            puzzle = new Puzzle(image, imagePath, br, this);
+
+            for (PuzzlePiece pf : puzzle.getPieces()){
+                table.getChildren().add(pf);
+            }
+
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+        return image;
+    }
+
+    /**
+     * Sets the tables size and position as dictated by the saved file
+     * @param br The saved file Reader
+     * @throws IOException if something bad happens
+     */
+    private void reloadTable(BufferedReader br) throws IOException {
+        String line = getNextLine(br);
+        double value = Double.parseDouble(line.strip());
+        table.setMinWidth(value);
+
+        line = getNextLine(br);
+        value = Double.parseDouble(line.strip());
+        table.setMinHeight(value);
+
+        line = getNextLine(br);
+        value = Double.parseDouble(line.strip());
+        table.setScaleX(value);
+
+        line = getNextLine(br);
+        value = Double.parseDouble(line.strip());
+        table.setScaleY(value);
+
+        line = getNextLine(br);
+        value = Double.parseDouble(line.strip());
+        pane.setHvalue(value);
+
+        line = getNextLine(br);
+        value = Double.parseDouble(line.strip());
+        pane.setVvalue(value);
+
+        pane.layout();
+    }
+
     /**
      * resizes the table so a pieces that moves is always on the table
      * @param position the position of the piece on the table
@@ -181,6 +250,24 @@ public class PuzzleTable extends AnchorPane {
             table.setMinHeight(position.getMaxY());
             pane.setVvalue(pane.getVmax());
         }
+    }
+
+    /**
+     *
+     */
+    public String save(){
+        String save = "";
+
+        save += /*"Width " +*/ table.getWidth() + "\n";
+        save += /*"Height " +*/ table.getHeight() + "\n";
+        save += /*"ScaleX " +*/ table.getScaleX() + "\n";
+        save += /*"ScaleY " +*/ table.getScaleY() + "\n";
+        save += /*"HValue " +*/ pane.getHvalue() + "\n";
+        save += /*"VValue " +*/ pane.getVvalue() + "\n";
+
+        save += /*"Puzzle" + "\n" +*/ puzzle.save();
+
+        return save;
     }
 
     /**
